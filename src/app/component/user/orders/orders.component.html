@@ -1,0 +1,53 @@
+<section>
+    <!-- sidebar menu start -->
+    <app-nav></app-nav>
+    <!-- //sidebar menu end -->
+    <!-- header-starts -->
+    <app-side></app-side>
+    <!-- //header-ends -->
+    <!-- main content start -->
+    <div class="main-content">
+
+        <!-- content -->
+        <div class="container-fluid content-top-gap">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb my-breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
+                </ol>
+            </nav>
+            <!-- table -->
+            <div class="card card_border">
+                <div class="card-body">
+                    <div class="table-main">
+                        <table id="documents-table" class="table">
+                            <thead class="sub-titles">
+                                <tr>
+                                    <th scope="col">
+                                        <div style="width: 40px;">
+                                            <input type="checkbox" id="selectedndeselected" onclick="ischeckedall()">
+                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash"></i>
+                                        </div>
+                                    </th>
+                                    <th>Cetagory ID</th>
+                                    <th>Name</th>
+                                    <th>Sub Cetagory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- table end -->
+
+        </div>
+        <!-- //content -->
+    </div>
+    <!-- main content end-->
+</section>
+<app-footer></app-footer>

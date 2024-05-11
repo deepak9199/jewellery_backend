@@ -1,0 +1,43 @@
+<app-loading *ngIf="loading"></app-loading>
+<section *ngIf="!loading">
+    <!-- content -->
+    <div class="">
+        <!-- login form -->
+        <section class="login-form py-md-5 py-3">
+            <div class="card card_border p-md-4">
+                <div class="card-body">
+                    <!-- form -->
+                    <form #myLoginForm="ngForm" (ngSubmit)="signIn(); myLoginForm.reset()">
+                        <div class="login__header text-center mb-lg-5 mb-4">
+                            <h3 class="login__title mb-2"> Login</h3>
+                            <p>Welcome back, login to continue</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" class="input__label">Email</label>
+                            <input [(ngModel)]="form_login.email" name="email" #email="ngModel" required type="email"
+                                class="form-control login_text_field_bg input-style" placeholder="Enter Email" />
+                            <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                                <div *ngIf="email.errors?.['required']">Email is required.</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1" class="input__label">Password</label>
+                            <input [(ngModel)]="form_login.password" name="password" #password="ngModel" required
+                                type="password" class="form-control login_text_field_bg input-style"
+                                placeholder="*******" />
+                            <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                                <div *ngIf="password.errors?.['required']">Password is required.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap justify-content-between">
+                            <button type="submit" class="btn btn-primary btn-style mt-4"
+                                [disabled]="myLoginForm.invalid">Login now</button>
+                        </div>
+                    </form>
+                    <!-- //form -->
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- //content -->
+</section>

@@ -1,0 +1,70 @@
+<app-loading *ngIf="loading"></app-loading>
+<section *ngIf="!loading">
+    <!-- content -->
+    <div class="">
+        <!-- login form -->
+        <section class="login-form py-md-5 py-3">
+            <div class="card card_border p-md-4">
+                <div class="card-body">
+                    <!-- form -->
+                    <form #myformregister="ngForm" (ngSubmit)="register();myformregister.reset()">
+                        <div class="login__header text-center mb-lg-5 mb-4">
+                            <h3 class="login__title mb-2"> Registor Admin</h3>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="formregister.email" id="email" name="email" #email="ngModel"
+                                type="email" required class="form-control" placeholder="Email">
+                        </div>
+                        <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                            <div style="color: rgba(255, 0, 0, 0.612);" *ngIf="email.errors?.['required']">Email is
+                                required.</div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="formregister.password" id="password" name="password" required
+                                #password="ngModel" type="password" class="form-control" placeholder="Enter password">
+                        </div>
+                        <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                            <div style="color: rgba(255, 0, 0, 0.612);" *ngIf="password.errors?.['required']">Passowrd
+                                is
+                                required.</div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="formregister.name" id="name" name="name" required #name="ngModel"
+                                type="name" class="form-control" placeholder="Enter name">
+                        </div>
+                        <div *ngIf="name.invalid && (name.dirty || name.touched)">
+                            <div style="color: rgba(255, 0, 0, 0.612);" *ngIf="name.errors?.['required']">Passowrd is
+                                required.</div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="formregister.contact" id="contact" name="contact" required
+                                #contact="ngModel" type="contact" class="form-control" placeholder="Enter contact">
+                        </div>
+                        <div *ngIf="contact.invalid && (contact.dirty || contact.touched)">
+                            <div style="color: rgba(255, 0, 0, 0.612);" *ngIf="contact.errors?.['required']">Passowrd is
+                                required.</div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="formregister.passcode" id="passcode" name="passcode" required
+                                #passcode="ngModel" type="password" class="form-control" placeholder="Enter passcode">
+                        </div>
+                        <div *ngIf="passcode.invalid && (passcode.dirty || passcode.touched)">
+                            <div style="color: rgba(255, 0, 0, 0.612);" *ngIf="passcode.errors?.['required']">Passowrd
+                                is
+                                required.</div>
+                        </div>
+                        <div class="row">
+                            <button hidden type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="col-4">
+                                <button data-dismiss="modal" type="submit" class="btn btn-primary btn-block"
+                                    [disabled]="myformregister.invalid">Register</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- //form -->
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- //content -->
+</section>
