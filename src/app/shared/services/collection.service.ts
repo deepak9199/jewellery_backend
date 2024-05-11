@@ -37,6 +37,7 @@ export class CollectionService {
     return new Observable<any>(observer => {
       this.firestore.collection(collectionName).add(data)
         .then(docRef => {
+          const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', data.id);
           observer.next(docRef);
           observer.complete();
         })
@@ -87,5 +88,26 @@ export class CollectionService {
     const fileRef = this.storage.ref(filePath);
     return fileRef.getDownloadURL();
   }
- 
+  // Method to delete data from a specific collection based on UID
+  private deleteData(collection: string, id: string, index: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.firestore.collection(collection, ref => ref.where(index, '==', id)).get().toPromise()
+        .then((querySnapshot) => {
+          const deletePromises: any[] = [];
+          if (typeof querySnapshot != 'undefined') {
+            querySnapshot.forEach(doc => {
+              deletePromises.push(doc.ref.delete());
+            });
+            console.log(deletePromises)
+            return Promise.all(deletePromises);
+          }
+          else {
+            return Promise.all(deletePromises);
+          }
+
+        })
+        .then(() => resolve())
+        .catch(error => reject(error));
+    });
+  }
 }

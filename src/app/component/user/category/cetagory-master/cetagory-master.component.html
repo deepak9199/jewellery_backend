@@ -54,7 +54,8 @@
                                     <th>
                                         <input #selectalldata (click)="selectAll(selectalldata.checked)" type="checkbox"
                                             id="selectedndeselected">
-                                        <i id='deleteid' style="cursor: pointer;" class="fa fa-trash ml-2"></i>
+                                        <i id='deleteid' style="cursor: pointer;" class="fa fa-trash ml-2"
+                                            data-toggle="modal" data-target="#model-delete-all"></i>
                                     </th>
                                     <th>S/n</th>
                                     <th>Name</th>
@@ -164,6 +165,39 @@
                         <div class="row">
                             <div class="col-2">
                                 <button (click)="deleteYes()" class="btn btn-primary btn-block"
+                                    data-dismiss="modal">Yes</button>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-primary btn-block" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete all -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-delete-all" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form>
+                        <div class="input-group mb-3">
+                            <label>Confrom to delete Seleted ?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <button (click)="deleteYesall()" class="btn btn-primary btn-block"
                                     data-dismiss="modal">Yes</button>
                             </div>
                             <div class="col-2">

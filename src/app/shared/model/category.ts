@@ -24,3 +24,10 @@ export interface sub_category_detail {
     name: string
     createDate: string
 }
+export interface sub_category_detail_selected {
+    id: string
+    category_id: string
+    name: string
+    createDate: string
+    checked: boolean
+}

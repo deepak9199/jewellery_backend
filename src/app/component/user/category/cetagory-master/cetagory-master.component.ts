@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CollectionService } from '../../../../shared/services/collection.service';
 import { Router } from '@angular/router';
-import { Subscribable, Subscription } from 'rxjs';
+import { Subscribable, Subscription, share } from 'rxjs';
 import { category, category_detail, category_detail_selected, sub_category } from '../../../../shared/model/category';
 import { Token } from '@angular/compiler';
 import { TokenStorageService } from '../../../../shared/services/token-storage.service';
@@ -75,15 +75,29 @@ export class CetagoryMasterComponent {
     this.deleteobj = data
   }
   deleteYes() {
-    this.deletecomplainpi(this.deleteobj)
+    this.deleteapi(this.deleteobj)
+  }
+  deleteYesall() {
+    this.selected_category.filter((item: category_detail_selected) => item.checked == true).map((item: category_detail_selected) => {
+      this.deleteapi({
+        id: item.id,
+        name: item.name,
+        createDate: item.createDate
+      })
+    })
+
   }
   routtoSubcat(data: category_detail) {
-    console.log(data)
+    this.router.navigate(['/admin/cetagory/subCategory']).then(() => {
+      this.sharedService.savedata(JSON.stringify(data))
+    })
+    this.sharedService.savedata(JSON.stringify(data))
   }
-  private deletecomplainpi(data: category_detail) {
+  private deleteapi(data: category_detail) {
     this.subdeletecategory = this.collection.deleteDocument('category', data.id).subscribe({
       next: (data) => {
         // this.toster.success('Deleted Successfully')
+        this.ngOnInit()
       },
       error: (err) => {
         console.log(err)
@@ -95,6 +109,7 @@ export class CetagoryMasterComponent {
     this.subaddcategory = this.collection.addDocumnet('category', data).subscribe({
       next: (data) => {
         this.loading = false
+        this.ngOnInit()
       },
       error: (err) => {
         this.loading = false
@@ -105,6 +120,7 @@ export class CetagoryMasterComponent {
     this.loading = true
     this.subagetcategory = this.collection.getData('category').subscribe({
       next: (data: category_detail[]) => {
+        this.selected_category = []
         data.map((item: category_detail) => this.selected_category.push({ id: item.id, name: item.name, createDate: item.createDate, checked: false }))
         this.loading = false
       },
@@ -118,6 +134,7 @@ export class CetagoryMasterComponent {
     this.subagetcategory = this.collection.updateDocument('category', data.id, data).subscribe({
       next: (data) => {
         this.loading = false
+        this.ngOnInit()
       },
       error: (err) => {
         this.loading = false
