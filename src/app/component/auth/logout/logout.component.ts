@@ -24,10 +24,17 @@ export class LogoutComponent {
   ) { }
 
   ngOnInit(): void {
-    // this.signout()
+
     let obj: attendance_List[] = this.token.getAttendence()
-    obj[0].logout_date_time = new Date().toString()
-    this.updateattendance(obj[0])
+    if (obj != null) {
+      obj[0].logout_date_time = new Date().toString()
+      console.log(obj)
+      this.updateattendance(obj[0])
+    }
+    else {
+      this.signout()
+    }
+
   }
   logout() {
     this.authService.logout();

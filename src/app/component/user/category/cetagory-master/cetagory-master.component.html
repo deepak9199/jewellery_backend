@@ -13,7 +13,7 @@
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item"><a>Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Cetagory</li>
                 </ol>
             </nav>
@@ -21,41 +21,83 @@
             <!-- forms 2 -->
             <div class="card card_border py-2 mb-4">
                 <div class="card-body">
-                    <!-- <form action="#" method="post"> -->
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <input type="text" class="form-control input-style" id="catname"
-                                placeholder="Enter Cetagory Name">
+                    <form #myformCategory="ngForm" (ngSubmit)="createCaegory();myformCategory.reset()">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <input [(ngModel)]="form_category.name" #catname="ngModel" name="catname" required
+                                    type="text" class="form-control input-style" id="catname"
+                                    placeholder="Enter Cetagory Name">
+                                <div *ngIf="catname.invalid && (catname.dirty || catname.touched)">
+                                    <div *ngIf="catname.errors?.['required']" style="color: rgba(255, 0, 0, 0.493);">
+                                        Category name required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <button [disabled]="catname.invalid" type="submit" id="catcreate"
+                                    class="btn btn-primary btn-style ">Create</button>
+                            </div>
                         </div>
-                        <div class="form-group col-md-3">
-                            <button id="catcreate" class="btn btn-primary btn-style ">Create</button>
-                        </div>
-                    </div>
-                    <!-- </form> -->
+                    </form>
                 </div>
             </div>
             <!-- //forms 2 -->
-
+            <!-- loading -->
+            <app-loading *ngIf="loading"></app-loading>
             <!-- table -->
-            <div class="card card_border">
+            <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
                     <div class="table-main">
-                        <table id="documents-table" class="table">
+                        <table id="documents-table" class="table table-responsive-lg">
                             <thead class="sub-titles">
                                 <tr>
-                                    <th scope="col">
-                                        <div style="width: 40px;">
-                                            <input type="checkbox" id="selectedndeselected" onclick="ischeckedall()">
-                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash"></i>
-                                        </div>
+                                    <th>
+                                        <input #selectalldata (click)="selectAll(selectalldata.checked)" type="checkbox"
+                                            id="selectedndeselected">
+                                        <i id='deleteid' style="cursor: pointer;" class="fa fa-trash ml-2"></i>
                                     </th>
-                                    <th>Cetagory ID</th>
+                                    <th>S/n</th>
                                     <th>Name</th>
-                                    <th>Sub Cetagory</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <tr *ngFor="let catobj of selected_category  ;let i=index">
+                                    <td>
+                                        <input #selcetOneByonedate
+                                            (click)="selectOneByOne(selcetOneByonedate.checked,catobj)" type="checkbox"
+                                            [checked]="catobj.checked" id="selectedndeselected">
+                                    </td>
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        {{catobj.name}}
+                                    </td>
+                                    <td style="width: 300px;">
+                                        <div class="row">
+                                            <div *ngIf="role=='admin'" class="col-lg-2">
+                                                <button (click)="selectDeleteID(catobj)" type="button"
+                                                    data-toggle="modal" data-target="#model-delete"
+                                                    class="btn btn-primary ">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button (click)="update(catobj)" type="button" data-toggle="modal"
+                                                    data-target="#model-update" class="btn btn-primary ">
+                                                    <i class="fa fa-pencil"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <button (click)="routtoSubcat(catobj)" type="button"
+                                                    class="btn btn-primary ">
+                                                    <i class="fa fa-plus"> Add Sub-Category </i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -70,3 +112,67 @@
     <!-- main content end-->
 </section>
 <app-footer></app-footer>
+<!-- update -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-update" tabindex="-1" role="dialog" aria-labelledby="complaindesciption"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form #myformupdate="ngForm" (ngSubmit)="myformupdate.reset()">
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="edit_form_category.name" id="name" name="name" #name="ngModel"
+                                type="text" required class="form-control" placeholder="Enter category name">
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <button (click)="submit_update()" type="submit" class="btn btn-primary btn-block"
+                                    [disabled]="myformupdate.invalid" data-dismiss="modal">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-delete" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form>
+                        <div class="input-group mb-3">
+                            <label>Confrom to delete ?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <button (click)="deleteYes()" class="btn btn-primary btn-block"
+                                    data-dismiss="modal">Yes</button>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-primary btn-block" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

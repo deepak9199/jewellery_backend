@@ -30,7 +30,7 @@ export class NavComponent {
     private router: Router
   ) { }
   ngOnInit() {
-    this.checkip()
+    // this.checkip()
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
   }
