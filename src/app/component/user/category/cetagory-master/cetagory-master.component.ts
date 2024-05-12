@@ -97,7 +97,7 @@ export class CetagoryMasterComponent {
     this.subdeletecategory = this.collection.deleteDocument('category', data.id).subscribe({
       next: (data) => {
         // this.toster.success('Deleted Successfully')
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         console.log(err)
@@ -109,7 +109,7 @@ export class CetagoryMasterComponent {
     this.subaddcategory = this.collection.addDocumnet('category', data).subscribe({
       next: (data) => {
         this.loading = false
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         this.loading = false
@@ -121,7 +121,8 @@ export class CetagoryMasterComponent {
     this.subagetcategory = this.collection.getData('category').subscribe({
       next: (data: category_detail[]) => {
         this.selected_category = []
-        data.map((item: category_detail) => this.selected_category.push({ id: item.id, name: item.name, createDate: item.createDate, checked: false }))
+        const array = data.map((item: category_detail) => { return { id: item.id, name: item.name, createDate: item.createDate, checked: false } })
+        this.selected_category = array
         this.loading = false
       },
       error: (err) => {
@@ -134,7 +135,7 @@ export class CetagoryMasterComponent {
     this.subagetcategory = this.collection.updateDocument('category', data.id, data).subscribe({
       next: (data) => {
         this.loading = false
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         this.loading = false

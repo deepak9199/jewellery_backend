@@ -118,7 +118,7 @@ export class SubCategoryMasterComponent {
     this.subdeletecategory = this.collection.deleteDocument('sub-category', data.id).subscribe({
       next: (data) => {
         // this.toster.success('Deleted Successfully')
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         console.log(err)
@@ -130,7 +130,7 @@ export class SubCategoryMasterComponent {
     this.subaddcategory = this.collection.addDocumnet('sub-category', data).subscribe({
       next: (data) => {
         this.loading = false
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         this.loading = false
@@ -142,10 +142,15 @@ export class SubCategoryMasterComponent {
     this.subagetcategory = this.collection.getData('sub-category').subscribe({
       next: (data: sub_category_detail[]) => {
         this.selected_category = []
-        data.filter((item: sub_category_detail) => item.category_id === this.category.id).map((item: sub_category_detail) => this.selected_category.push({
-          id: item.id, name: item.name, createDate: item.createDate, checked: false,
-          category_id: this.category.id
-        }))
+        const array = data.filter((item: sub_category_detail) => item.category_id === this.category.id).map((item: sub_category_detail) => {
+          return {
+            id: item.id, name: item.name,
+            createDate: item.createDate,
+            checked: false,
+            category_id: this.category.id
+          }
+        })
+        this.selected_category = array
         this.loading = false
       },
       error: (err) => {
@@ -158,7 +163,7 @@ export class SubCategoryMasterComponent {
     this.subagetcategory = this.collection.updateDocument('sub-category', data.id, data).subscribe({
       next: (data) => {
         this.loading = false
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         this.loading = false

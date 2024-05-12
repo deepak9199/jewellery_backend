@@ -266,7 +266,7 @@ export class ProductsComponent {
     this.sub_product_del = this.collection.deleteDocument('product', data.id).subscribe({
       next: (data) => {
         // this.toster.success('Deleted Successfully')
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         console.log(err)
@@ -376,7 +376,7 @@ export class ProductsComponent {
     this.loading = true
     this.sub_product_add = this.collection.addDocumentsarray('product', data).subscribe({
       next: (data) => {
-        this.ngOnInit()
+        // this.ngOnInit()
         this.loading = false
       },
       error: (err) => {

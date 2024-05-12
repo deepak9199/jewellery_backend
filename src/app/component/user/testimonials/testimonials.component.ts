@@ -15,7 +15,11 @@ import { Router } from '@angular/router';
 })
 export class TestimonialsComponent {
   loading: boolean = false
-  testimonials: testimonials_details[] = []
+  form_testimonials: testimonials = {
+    name: '',
+    comment: '',
+    createdTime: new Date().toString()
+  }
   edit_form_testimonials: testimonials_details = {
     id: '',
     name: '',
@@ -49,6 +53,9 @@ export class TestimonialsComponent {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
     this.get_test_api()
+  }
+  create() {
+    this.add_test_api(this.form_testimonials)
   }
   update(data: testimonials_selected) {
     this.edit_form_testimonials = data
@@ -100,6 +107,7 @@ export class TestimonialsComponent {
           }
         })
         this.testimonials_seleted = array
+        this.loading = false
       },
       error: (err) => {
         console.error(err)
@@ -130,9 +138,9 @@ export class TestimonialsComponent {
       }
     })
   }
-  private add_test_api(data: testimonials[]) {
+  private add_test_api(data: testimonials) {
     this.loading = true
-    this.sub_testimonials_add = this.collection.addDocumentsarray('testimonials', data).subscribe({
+    this.sub_testimonials_add = this.collection.addDocumnet('testimonials', data).subscribe({
       next: (data) => {
         // this.ngOnInit()
         this.loading = false
@@ -142,5 +150,12 @@ export class TestimonialsComponent {
         this.loading = false
       }
     })
+  }
+  ngOnDestroy() {
+    this.sub_testimonials_add?.unsubscribe();
+    this.sub_testimonials_del?.unsubscribe();
+    this.sub_testimonials_get?.unsubscribe();
+    this.sub_testimonials_update?.unsubscribe();
+
   }
 }
