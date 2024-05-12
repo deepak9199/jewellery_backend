@@ -23,6 +23,21 @@ export class ProductsComponent {
   select_sub_cate_id: string = ''
   product_retailji_selected: product_retailji_selected[] = []
   product_details_selected: product_detail_selected[] = []
+  edit_form_product: product_detail = {
+    id: '',
+    retailji_product_id: '',
+    category_id: '',
+    sub_category_id: '',
+    images: []
+  }
+  deleteobj: product_detail = {
+    id: '',
+    retailji_product_id: '',
+    category_id: '',
+    sub_category_id: '',
+    images: []
+  }
+  role: string = ''
   private globle_retailji_product_list: product_retailji_selected[] = []
   private sub_retailji_get: Subscription | undefined
   private sub_cat_get: Subscription | undefined
@@ -31,6 +46,7 @@ export class ProductsComponent {
   private sub_product_del: Subscription | undefined
   private sub_product_update: Subscription | undefined
   private sub_product_add: Subscription | undefined
+
 
   constructor(
     private toster: ToastrService,
@@ -42,6 +58,8 @@ export class ProductsComponent {
   ) { }
 
   ngOnInit() {
+    if (this.token.getUser().role[0] != null)
+      this.role = this.token.getUser().role[0]
     this.get_cat_api()
   }
   addproduct() {
@@ -95,6 +113,110 @@ export class ProductsComponent {
     }
     this.product_retailji_selected[index] = obj
   }
+  update(data: product_detail_selected) {
+    this.edit_form_product = data
+  }
+  submit_update() {
+    this.updateproductapi(this.edit_form_product)
+  }
+  selectDeleteID(data: product_detail_selected) {
+    this.deleteobj = data
+  }
+  deleteYes() {
+    this.deleteapi(this.deleteobj)
+  }
+  deleteYesall() {
+    this.product_details_selected.filter((item: product_detail_selected) => item.checked == true).map((item: product_detail_selected) => {
+      this.deleteapi({
+        id: item.id,
+        retailji_product_id: item.retailji_product_id,
+        category_id: item.category_id,
+        sub_category_id: item.sub_category_id,
+        images: []
+      })
+    })
+
+  }
+  selectAll(event: boolean) {
+    this.product_details_selected = this.product_details_selected.map(obj => ({ ...obj, checked: event }));
+  }
+  selectOneByOne(event: boolean, data: product_detail_selected, index: number) {
+    let obj: product_detail_selected = {
+      id: data.id,
+      retailji_product_id: data.retailji_product_id,
+      category_id: data.category_id,
+      sub_category_id: data.sub_category_id,
+      images: data.images,
+      checked: event
+    }
+    this.product_details_selected[index] = obj
+  }
+  onFileSelected(event: any, data: product_detail_selected, imageindex: number) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.collection.uploadFile(file, 'users/' + this.token.getUser().uid + '/product').subscribe(
+        (progress) => {
+          // this.uploadProgress = progress;
+          console.log('Upload progress:', progress);
+        },
+        (error) => {
+          console.error('Upload error:', error);
+        },
+        () => {
+          console.log('Upload complete');
+          this.collection.getDownloadUrl('users/' + this.token.getUser().uid + '/product/' + file.name).subscribe(
+            (url) => {
+              console.log('Download URL:', url);
+              if (data.images.length == 0) {
+                data.images.push(url)
+                this.updateproductapi(data)
+                console.log('0')
+              }
+              else {
+                if (data.images.length >= (imageindex + 1)) {
+                  data.images[imageindex] = url
+                  this.updateproductapi(data)
+                  console.log('not index')
+                }
+                else {
+                  console.log('not zero')
+                  data.images.push(url)
+                  this.updateproductapi(data)
+                }
+              }
+            },
+            (error) => {
+              console.error('Error getting download URL:', error);
+            }
+          );
+        }
+      );
+    }
+
+  }
+  private updateproductapi(data: product_detail) {
+    this.loading = true
+    this.sub_product_update = this.collection.updateDocument('product', data.id, data).subscribe({
+      next: (data) => {
+        this.loading = false
+        this.ngOnInit()
+      },
+      error: (err) => {
+        this.loading = false
+      }
+    })
+  }
+  private deleteapi(data: product_detail) {
+    this.sub_product_del = this.collection.deleteDocument('product', data.id).subscribe({
+      next: (data) => {
+        // this.toster.success('Deleted Successfully')
+        this.ngOnInit()
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
   private get_cat_api() {
     this.loading = true
     this.sub_cat_get = this.collection.getData('category').subscribe({
@@ -123,6 +245,18 @@ export class ProductsComponent {
       }
     })
   }
+  isimage(image: string): boolean {
+    // console.log(image)
+    let result: boolean = false
+    if (image == '' || typeof image == 'undefined' || image == null) {
+      result = false
+    }
+    else {
+      result = true
+    }
+    // console.log(result)
+    return result
+  }
   private get_product_api() {
     this.loading = true
     this.sub_cat_get = this.collection.getData('product').subscribe({
@@ -138,6 +272,7 @@ export class ProductsComponent {
           };
         });
         this.product_details_selected = transformedArray
+        // console.log(this.product_details_selected)
         this.refresh_Retailji_product(this.product_details_selected)
         this.loading = false
       },

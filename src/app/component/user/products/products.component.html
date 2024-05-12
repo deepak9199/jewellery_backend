@@ -58,13 +58,15 @@
             <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
                     <div class="table-main">
-                        <table id="documents-table" class="table">
+                        <table id="documents-table" class="table table-responsive-lg">
                             <thead class="sub-titles">
                                 <tr>
                                     <th scope="col">
                                         <div style="width: 40px;">
-                                            <input type="checkbox" id="selectedndeselected">
-                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash ml-2"></i>
+                                            <input #selectallproduct type="checkbox" id="selectedndeselected"
+                                                (click)="selectAll(selectallproduct.checked)">
+                                            <i data-toggle="modal" data-target="#model-delete-all" id='deleteid'
+                                                style="cursor: pointer;" class="fa fa-trash ml-2"></i>
                                         </div>
                                     </th>
                                     <th>Cetagory</th>
@@ -74,13 +76,14 @@
                                     <th>Img-2</th>
                                     <th>Img-3</th>
                                     <th>Img-4</th>
-                                    <th>Upload</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let productobj of product_details_selected">
+                                <tr *ngFor="let productobj of product_details_selected;let i=index">
                                     <td>
-                                        <input type="checkbox" id="selectedndeselected">
+                                        <input #selectProductOneByone type="checkbox" id="selectedndeselected"
+                                            (click)="selectOneByOne(selectProductOneByone.checked,productobj,i)"
+                                            [checked]="productobj.checked">
                                     </td>
                                     <td>
                                         {{productobj.category_id}}
@@ -92,19 +95,89 @@
                                         {{productobj.sub_category_id}}
                                     </td>
                                     <td>
+                                        <label *ngIf="role=='admin'" for="fileInput" class="upload-btn ml10">
+                                            <div class="profile-img mb20-sm">
+                                                <!-- First image tag -->
+                                                <img *ngIf="!isimage(productobj.images[0])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
+                                                <!-- Second image tag -->
+                                                <img *ngIf="isimage(productobj.images[0])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="{{productobj.images[0]}}"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                            </div>
+
+                                            <!-- Hidden file input -->
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput"
+                                                (change)="onFileSelected($event,productobj,0)">
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label *ngIf="role=='admin'" for="fileInput1" class="upload-btn ml10">
+                                            <div class="profile-img mb20-sm">
+                                                <!-- First image tag -->
+                                                <img *ngIf="!isimage(productobj.images[1])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+
+                                                <!-- Second image tag -->
+                                                <img *ngIf="isimage(productobj.images[1])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="{{productobj.images[1]}}"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                            </div>
+
+                                            <!-- Hidden file input -->
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput1"
+                                                (change)="onFileSelected($event,productobj,1)">
+                                        </label>
                                     </td>
                                     <td>
 
+                                        <label *ngIf="role=='admin'" for="fileInput2" class="upload-btn ml10">
+                                            <div class="profile-img mb20-sm">
+                                                <!-- First image tag -->
+                                                <img *ngIf="!isimage(productobj.images[2])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+
+                                                <!-- Second image tag -->
+                                                <img *ngIf="isimage(productobj.images[2])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="{{productobj.images[2]}}"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                            </div>
+
+                                            <!-- Hidden file input -->
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput2"
+                                                (change)="onFileSelected($event,productobj,2)">
+                                        </label>
                                     </td>
                                     <td>
+                                        <label *ngIf="role=='admin'" for="fileInput3" class="upload-btn ml10">
+                                            <div class="profile-img mb20-sm">
+                                                <!-- First image tag -->
+                                                <img *ngIf="!isimage(productobj.images[3])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
-                                    </td>
-                                    <td>
+                                                <!-- Second image tag -->
+                                                <img *ngIf="isimage(productobj.images[3])" alt="profile" loading="lazy"
+                                                    width="71" height="71" decoding="async" data-nimg="1"
+                                                    class="rounded-circle wa-xs" src="{{productobj.images[3]}}"
+                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                            </div>
 
-                                    </td>
-                                    <td>
-
+                                            <!-- Hidden file input -->
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput3"
+                                                (change)="onFileSelected($event,productobj,3)">
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -121,6 +194,7 @@
     <!-- main content end-->
 </section>
 <app-footer></app-footer>
+<!-- create products -->
 <div class="card-body">
     <!-- Modal -->
     <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
@@ -166,6 +240,103 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button (click)="addproduct()" id="submitselectcat" type="button" class="btn btn-primary"
                         data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- update -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-update" tabindex="-1" role="dialog" aria-labelledby="complaindesciption"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form #myformupdate="ngForm" (ngSubmit)="myformupdate.reset()">
+                        <div class="input-group mb-3">
+                            <input [(ngModel)]="edit_form_product.category_id" id="name" name="name" #name="ngModel"
+                                type="text" required class="form-control" placeholder="Enter category name">
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <button (click)="submit_update()" type="submit" class="btn btn-primary btn-block"
+                                    [disabled]="myformupdate.invalid" data-dismiss="modal">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-delete" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form>
+                        <div class="input-group mb-3">
+                            <label>Confrom to delete ?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <button (click)="deleteYes()" class="btn btn-primary btn-block"
+                                    data-dismiss="modal">Yes</button>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-primary btn-block" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete all -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-delete-all" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form>
+                        <div class="input-group mb-3">
+                            <label>Confrom to delete Seleted ?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <button (click)="deleteYesall()" class="btn btn-primary btn-block"
+                                    data-dismiss="modal">Yes</button>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-primary btn-block" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
