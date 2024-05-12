@@ -31,8 +31,10 @@ export class NavComponent {
   ) { }
   ngOnInit() {
     // this.checkip()
+
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
+    this.getuserapi()
   }
   private getattendance() {
     this.collection.getData('attendance').subscribe({

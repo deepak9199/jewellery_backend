@@ -9,6 +9,7 @@ import { TokenStorageService } from '../services/token-storage.service';
 export class SideComponent {
   role: string = ''
   activeLi: HTMLElement | undefined;
+  isMenuCollapsed: string = 'toggle-btn';
   constructor(private token: TokenStorageService) { }
   ngOnInit() {
     if (this.token.getUser().role[0] != null)
@@ -28,5 +29,17 @@ export class SideComponent {
 
   removeHoverClass(li: HTMLElement): void {
     li.classList.remove('nav-hover');
+  }
+  toggleMenu() {
+    const body = document.body;
+    if (this.isMenuCollapsed === 'toggle-btn') {
+      this.isMenuCollapsed = 'toggle-btn menu-collapsed'
+      body.classList.remove('sidebar-menu-collapsed');
+    }
+    else if (this.isMenuCollapsed === 'toggle-btn menu-collapsed') {
+      this.isMenuCollapsed = 'toggle-btn'
+
+      body.classList.add('sidebar-menu-collapsed');
+    }
   }
 }
