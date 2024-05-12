@@ -9,7 +9,7 @@ export class ApiCallService {
   constructor(private http: HttpClient) { }
 
   // Example function to fetch data from the API
-  getbanner(phoneNumber: number): Observable<any> {
-    return this.http.post("https://node.express.tensoftware.in", { phone: phoneNumber, type: "customer" });
+  getRetailjiProducts(): Observable<any> {
+    return this.http.post("https://node.express.tensoftware.in", { type: "jewellers" });
   }
 }

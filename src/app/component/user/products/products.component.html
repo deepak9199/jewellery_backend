@@ -13,43 +13,49 @@
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item"><a>Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Products</li>
                 </ol>
             </nav>
-
+            <app-loading *ngIf="loading"></app-loading>
             <!-- forms 2 -->
-            <div class="card card_border py-2 mb-4">
+            <div *ngIf="!loading" class="card card_border py-2 mb-4">
                 <div class="card-body">
-                    <!-- <form action="#" method="post"> -->
-                    <div class="form-row">
-                        <div class="form-group col-md-2">
-                            <select id="selectcat" class="form-control input-style">
-                                <option selected="">Select Cetagory</option>
-
-                            </select>
+                    <form #mySelectCategory="ngForm">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <select #select_cat_id="ngModel" [(ngModel)]="select_cate_id" (change)="changesubcat()"
+                                    name="select_cat_id" id="select_cat_id" required class="form-control input-style">
+                                    <option value="" selected>Select Cetagory</option>
+                                    <option *ngFor="let catobj of category" value="{{catobj.id}}"> {{catobj.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <select #select_sub_cat_id="ngModel" [(ngModel)]="select_sub_cate_id"
+                                    name="select_sub_cat_id" id="select_sub_cat_id" class="form-control input-style">
+                                    <option value="" selected>Select Sub Cetagory</option>
+                                    <option *ngFor="let subcatobj of sub_category_change" value="{{subcatobj.id}}">
+                                        {{subcatobj.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <!-- <button id="catcreate" class="btn btn-primary btn-style ">Create</button> -->
+                                <button [disabled]="mySelectCategory.invalid" type="button"
+                                    class="btn btn-primary btn-style" data-toggle="modal"
+                                    data-target="#exampleModalScrollable">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-group col-md-2">
-                            <select id="selectsubcat" class="form-control input-style">
-                                <option selected="">Select Sub Cetagory</option>
-
-                            </select>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <!-- <button id="catcreate" class="btn btn-primary btn-style ">Create</button> -->
-                            <button type="button" class="btn btn-primary btn-style" data-toggle="modal"
-                                data-target="#exampleModalScrollable">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- </form> -->
+                    </form>
                 </div>
             </div>
             <!-- //forms 2 -->
 
             <!-- table -->
-            <div class="card card_border">
+            <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
                     <div class="table-main">
                         <table id="documents-table" class="table">
@@ -57,19 +63,50 @@
                                 <tr>
                                     <th scope="col">
                                         <div style="width: 40px;">
-                                            <input type="checkbox" id="selectedndeselected" onclick="ischeckedall()">
-                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash"></i>
+                                            <input type="checkbox" id="selectedndeselected">
+                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash ml-2"></i>
                                         </div>
                                     </th>
                                     <th>Cetagory</th>
                                     <th>Name</th>
                                     <th>sub-Cetagory</th>
-                                    <th>Images</th>
+                                    <th>Img-1</th>
+                                    <th>Img-2</th>
+                                    <th>Img-3</th>
+                                    <th>Img-4</th>
                                     <th>Upload</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr *ngFor="let productobj of product_details_selected">
+                                    <td>
+                                        <input type="checkbox" id="selectedndeselected">
+                                    </td>
+                                    <td>
+                                        {{productobj.category_id}}
+                                    </td>
+                                    <td>
+                                        {{productobj.retailji_product_id}}
+                                    </td>
+                                    <td>
+                                        {{productobj.sub_category_id}}
+                                    </td>
+                                    <td>
 
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -84,3 +121,53 @@
     <!-- main content end-->
 </section>
 <app-footer></app-footer>
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalScrollableTitle" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <div class="table-main">
+                        <table id="documents-table-list" class="table">
+                            <thead class="sub-titles">
+                                <tr>
+                                    <th scope="col">
+                                        <div style="width: 40px;">
+                                            <input #retailjiselectall type="checkbox" id="selectedndeselectedproduct"
+                                                (click)="selectAllRetailjiProducts(retailjiselectall.checked)">
+                                        </div>
+                                    </th>
+                                    <!-- <th>id</th> -->
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let retailjiproductobj of product_retailji_selected;let i= index">
+                                    <td>
+                                        <input #retailjiselectOnebyone type="checkbox" id="selectedndeselectedproduct"
+                                            (click)="selectOneByOneRetailjiProducts(retailjiselectOnebyone.checked,retailjiproductobj,i)"
+                                            [checked]="retailjiproductobj.checked">
+                                    </td>
+                                    <!-- <td> {{retailjiproductobj.id}} </td> -->
+                                    <td> {{retailjiproductobj.item_name}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button (click)="addproduct()" id="submitselectcat" type="button" class="btn btn-primary"
+                        data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

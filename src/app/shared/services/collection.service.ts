@@ -37,7 +37,7 @@ export class CollectionService {
     return new Observable<any>(observer => {
       this.firestore.collection(collectionName).add(data)
         .then(docRef => {
-          const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', data.id);
+
           observer.next(docRef);
           observer.complete();
         })
@@ -46,11 +46,40 @@ export class CollectionService {
         });
     });
   }
+  addDocumentsarray(collectionName: string, dataArray: any[]): Observable<any[]> {
+    return new Observable<any[]>(observer => {
+      const observables: any = [];
+      dataArray.forEach(data => {
+        observables.push(new Observable<any>(innerObserver => {
+          this.firestore.collection(collectionName).add(data)
+            .then(docRef => {
+              innerObserver.next(docRef);
+              innerObserver.complete();
+            })
+            .catch(error => {
+              innerObserver.error(error);
+            });
+        }));
+      });
+
+      // Combining observables using forkJoin
+      forkJoin(observables).subscribe({
+        next: (results: any) => {
+          observer.next(results); // Array of results
+          observer.complete();
+        },
+        error: error => {
+          observer.error(error);
+        }
+      });
+    });
+  }
 
   deleteDocument(collectionName: string, docId: string): Observable<void> {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).delete()
         .then(() => {
+          const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', docId);
           observer.next();
           observer.complete();
         })
