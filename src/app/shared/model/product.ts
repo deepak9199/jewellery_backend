@@ -3,6 +3,7 @@ export interface product {
     category_id: string
     sub_category_id: string
     images: string[]
+    createdTime: String
 }
 export interface product_detail {
     id: string
@@ -10,6 +11,7 @@ export interface product_detail {
     category_id: string
     sub_category_id: string
     images: string[]
+    createdTime: String
 }
 export interface product_detail_selected {
     id: string
@@ -18,6 +20,7 @@ export interface product_detail_selected {
     sub_category_id: string
     images: string[]
     checked: boolean
+    createdTime: String
 }
 export interface product_retailji {
     id: number

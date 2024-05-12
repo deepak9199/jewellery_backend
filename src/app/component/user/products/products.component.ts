@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { product, product_detail, product_detail_selected, product_retailji, product_retailji_selected } from '../../../shared/model/product';
 import { category_detail, sub_category_detail } from '../../../shared/model/category';
-import { Subscriber, Subscription } from 'rxjs';
+import { Subscriber, Subscription, first } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CollectionService } from '../../../shared/services/collection.service';
 import { SharedService } from '../../../shared/services/shared.service';
@@ -28,15 +28,18 @@ export class ProductsComponent {
     retailji_product_id: '',
     category_id: '',
     sub_category_id: '',
-    images: []
+    images: [],
+    createdTime: ''
   }
   deleteobj: product_detail = {
     id: '',
     retailji_product_id: '',
     category_id: '',
     sub_category_id: '',
-    images: []
+    images: [],
+    createdTime: ''
   }
+  progressbar: number = 0
   role: string = ''
   globle_retailji_product_list: product_retailji_selected[] = []
   private sub_retailji_get: Subscription | undefined
@@ -54,12 +57,15 @@ export class ProductsComponent {
     private apicall: ApiCallService,
     private router: Router,
     private token: TokenStorageService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) { }
 
   ngOnInit() {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
+    // this.get_cat_sub_product_api();
     this.get_cat_api()
   }
   addproduct() {
@@ -69,7 +75,8 @@ export class ProductsComponent {
         retailji_product_id: item.id.toString(),
         category_id: this.select_cate_id,
         sub_category_id: this.select_sub_cate_id,
-        images: []
+        images: [],
+        createdTime: new Date().toString()
       };
     });
     this.add_product_api(transformedList)
@@ -132,7 +139,8 @@ export class ProductsComponent {
         retailji_product_id: item.retailji_product_id,
         category_id: item.category_id,
         sub_category_id: item.sub_category_id,
-        images: []
+        images: [],
+        createdTime: item.createdTime
       })
     })
 
@@ -147,20 +155,26 @@ export class ProductsComponent {
       category_id: data.category_id,
       sub_category_id: data.sub_category_id,
       images: data.images,
-      checked: event
+      checked: event,
+      createdTime: data.createdTime
     }
     this.product_details_selected[index] = obj
   }
   onFileSelected(event: any, data: product_detail_selected, imageindex: number) {
     const file: File = event.target.files[0];
+    this.openModal()
     if (file) {
       this.collection.uploadFile(file, 'users/' + this.token.getUser().uid + '/product').subscribe(
         (progress) => {
-          // this.uploadProgress = progress;
-          console.log('Upload progress:', progress);
+          if (progress != null)
+            this.progressbar = progress;
+          if (this.progressbar == 100)
+            this.closeModal()
+          // console.log('Upload progress:', progress);
         },
         (error) => {
-          console.error('Upload error:', error);
+          this.toster.error('Upload error:', error);
+          this.closeModal()
         },
         () => {
           console.log('Upload complete');
@@ -170,16 +184,16 @@ export class ProductsComponent {
               if (data.images.length == 0) {
                 data.images.push(url)
                 this.updateproductapi(data)
-                console.log('0')
+                // console.log('0')
               }
               else {
                 if (data.images.length >= (imageindex + 1)) {
                   data.images[imageindex] = url
                   this.updateproductapi(data)
-                  console.log('not index')
+                  // console.log('not index')
                 }
                 else {
-                  console.log('not zero')
+                  // console.log('not zero')
                   data.images.push(url)
                   this.updateproductapi(data)
                 }
@@ -194,13 +208,23 @@ export class ProductsComponent {
     }
 
   }
+  openModal() {
+    const modal = this.el.nativeElement.querySelector('#model-progress-bar');
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+  }
+  closeModal() {
+    const modal = this.el.nativeElement.querySelector('#model-progress-bar');
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+  }
   getnameProductRetailji(data: product_retailji_selected[], id: string): string {
     let list = data.filter((item: product_retailji_selected) => item.id.toString() === id)
     if (list.length != 0) {
       return list[0].item_name
     }
     else {
-      console.error('get name not found')
+      // console.error('get name not found')
       return ''
     }
   }
@@ -214,12 +238,24 @@ export class ProductsComponent {
       return ''
     }
   }
+  isimage(image: string): boolean {
+    // console.log(image)
+    let result: boolean = false
+    if (image == '' || typeof image == 'undefined' || image == null) {
+      result = false
+    }
+    else {
+      result = true
+    }
+    // console.log(result)
+    return result
+  }
   private updateproductapi(data: product_detail) {
-    this.loading = true
+    // this.loading = true
     this.sub_product_update = this.collection.updateDocument('product', data.id, data).subscribe({
       next: (data) => {
         this.loading = false
-        this.ngOnInit()
+        // this.ngOnInit()
       },
       error: (err) => {
         this.loading = false
@@ -264,18 +300,6 @@ export class ProductsComponent {
       }
     })
   }
-  isimage(image: string): boolean {
-    // console.log(image)
-    let result: boolean = false
-    if (image == '' || typeof image == 'undefined' || image == null) {
-      result = false
-    }
-    else {
-      result = true
-    }
-    // console.log(result)
-    return result
-  }
   private get_product_api() {
     this.loading = true
     this.sub_cat_get = this.collection.getData('product').subscribe({
@@ -287,7 +311,8 @@ export class ProductsComponent {
             category_id: item.category_id,
             sub_category_id: item.sub_category_id,
             images: item.images,
-            checked: false
+            checked: false,
+            createdTime: item.createdTime
           };
         });
         this.product_details_selected = transformedArray
@@ -301,32 +326,13 @@ export class ProductsComponent {
       }
     })
   }
-  private add_product_api(data: product[]) {
-    this.loading = true
-    this.sub_product_add = this.collection.addDocumentsarray('product', data).subscribe({
-      next: (data) => {
-        this.ngOnInit()
-        this.loading = false
-      },
-      error: (err) => {
-        console.log(err)
-        this.loading = false
-      }
-    })
-  }
-  private refresh_Retailji_product(data: product_detail_selected[]) {
-    this.product_retailji_selected = this.globle_retailji_product_list
-    data.map((item: product_detail_selected) => {
-      this.product_retailji_selected = this.product_retailji_selected.filter((item_r: product_retailji_selected) => item_r.id.toString() != item.retailji_product_id)
-    })
-  }
   private get_product_retailji() {
     this.loading = true
     this.sub_retailji_get = this.apicall.getRetailjiProducts().subscribe({
       next: (data: product_retailji[]) => {
         this.get_product_api()
-        data.map((item: product_retailji) => {
-          let obj: product_retailji_selected = {
+        const transformedArray = data.map((item: product_retailji) => {
+          return {
             id: item.id,
             item_code: item.item_code,
             item_name: item.item_name,
@@ -356,8 +362,8 @@ export class ProductsComponent {
             itemno: item.itemno,
             checked: false
           }
-          this.product_retailji_selected.push(obj)
         })
+        this.product_retailji_selected = transformedArray
         this.globle_retailji_product_list = this.product_retailji_selected
       },
       error: (err) => {
@@ -366,6 +372,59 @@ export class ProductsComponent {
       }
     })
   }
+  private add_product_api(data: product[]) {
+    this.loading = true
+    this.sub_product_add = this.collection.addDocumentsarray('product', data).subscribe({
+      next: (data) => {
+        this.ngOnInit()
+        this.loading = false
+      },
+      error: (err) => {
+        console.log(err)
+        this.loading = false
+      }
+    })
+  }
+  private refresh_Retailji_product(data: product_detail_selected[]) {
+    this.product_retailji_selected = this.globle_retailji_product_list
+    data.map((item: product_detail_selected) => {
+      this.product_retailji_selected = this.product_retailji_selected.filter((item_r: product_retailji_selected) => item_r.id.toString() != item.retailji_product_id)
+    })
+  }
+  // private async get_cat_sub_product_api() {
+  //   try {
+  //     this.loading = true;
+
+  //     const categoryData = await this.collection.getData('category').pipe(first()).toPromise();
+  //     this.category = categoryData || [];
+
+  //     const subCategoryData = await this.collection.getData('sub-category').pipe(first()).toPromise();
+  //     this.sub_category = subCategoryData || [];
+
+  //     const productData = await this.collection.getData('product').pipe(first()).toPromise();
+  //     if (productData) {
+  //       const transformedArray = productData.map((item: product_detail) => {
+  //         return {
+  //           id: item.id,
+  //           retailji_product_id: item.retailji_product_id,
+  //           category_id: item.category_id,
+  //           sub_category_id: item.sub_category_id,
+  //           images: item.images,
+  //           checked: false
+  //         };
+  //       });
+  //       this.product_details_selected = transformedArray;
+  //       this.refresh_Retailji_product(this.product_details_selected);
+  //     } else {
+  //       this.product_details_selected = [];
+  //     }
+
+  //     this.loading = false;
+  //   } catch (err) {
+  //     console.error(err);
+  //     this.loading = false;
+  //   }
+  // }
   ngOnDestroy() {
     this.sub_retailji_get?.unsubscribe();
     this.sub_cat_get?.unsubscribe();

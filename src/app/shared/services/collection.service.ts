@@ -79,7 +79,7 @@ export class CollectionService {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).delete()
         .then(() => {
-          const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', docId);
+          // const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', docId);
           observer.next();
           observer.complete();
         })
@@ -127,7 +127,7 @@ export class CollectionService {
             querySnapshot.forEach(doc => {
               deletePromises.push(doc.ref.delete());
             });
-            console.log(deletePromises)
+            // console.log(deletePromises)
             return Promise.all(deletePromises);
           }
           else {

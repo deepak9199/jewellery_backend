@@ -97,7 +97,7 @@
                                         {{getname(sub_category,productobj.sub_category_id)}}
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id+0" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[0])" alt="profile" loading="lazy"
@@ -114,11 +114,11 @@
 
                                             <!-- Hidden file input -->
                                             <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,0)">
+                                                [id]="productobj.id+0" (change)="onFileSelected($event,productobj,0)">
                                         </label>
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id+1" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[1])" alt="profile" loading="lazy"
@@ -135,12 +135,12 @@
 
                                             <!-- Hidden file input -->
                                             <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,1)">
+                                                [id]="productobj.id+1" (change)="onFileSelected($event,productobj,1)">
                                         </label>
                                     </td>
                                     <td>
 
-                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id+2" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[2])" alt="profile" loading="lazy"
@@ -157,11 +157,11 @@
 
                                             <!-- Hidden file input -->
                                             <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,2)">
+                                                [id]="productobj.id+2" (change)="onFileSelected($event,productobj,2)">
                                         </label>
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id+3" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[3])" alt="profile" loading="lazy"
@@ -178,7 +178,7 @@
 
                                             <!-- Hidden file input -->
                                             <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,3)">
+                                                [id]="productobj.id+3" (change)="onFileSelected($event,productobj,3)">
                                         </label>
                                     </td>
                                 </tr>
@@ -339,6 +339,31 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- progress bar -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-progress-bar" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" [style.width.%]="progressbar"
+                            [attr.aria-valuenow]="progressbar" [attr.aria-valuemin]="0" [attr.aria-valuemax]="100">
+                            {{ progressbar | number:'1.2-2' }}% Complete (info)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
