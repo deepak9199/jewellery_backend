@@ -69,6 +69,7 @@
                                                 style="cursor: pointer;" class="fa fa-trash ml-2"></i>
                                         </div>
                                     </th>
+                                    <th>S/n</th>
                                     <th>Cetagory</th>
                                     <th>Name</th>
                                     <th>sub-Cetagory</th>
@@ -85,6 +86,7 @@
                                             (click)="selectOneByOne(selectProductOneByone.checked,productobj,i)"
                                             [checked]="productobj.checked">
                                     </td>
+                                    <td class="align-middle"> {{i+1}} </td>
                                     <td class="align-middle">
                                         {{getname(category,productobj.category_id)}}
                                     </td>
@@ -95,7 +97,7 @@
                                         {{getname(sub_category,productobj.sub_category_id)}}
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" for="fileInput" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[0])" alt="profile" loading="lazy"
@@ -111,12 +113,12 @@
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput"
-                                                (change)="onFileSelected($event,productobj,0)">
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,0)">
                                         </label>
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" for="fileInput1" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[1])" alt="profile" loading="lazy"
@@ -132,13 +134,13 @@
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput1"
-                                                (change)="onFileSelected($event,productobj,1)">
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,1)">
                                         </label>
                                     </td>
                                     <td>
 
-                                        <label *ngIf="role=='admin'" for="fileInput2" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[2])" alt="profile" loading="lazy"
@@ -154,12 +156,12 @@
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput2"
-                                                (change)="onFileSelected($event,productobj,2)">
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,2)">
                                         </label>
                                     </td>
                                     <td>
-                                        <label *ngIf="role=='admin'" for="fileInput3" class="upload-btn ml10">
+                                        <label *ngIf="role=='admin'" [for]="productobj.id" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
                                                 <img *ngIf="!isimage(productobj.images[3])" alt="profile" loading="lazy"
@@ -175,8 +177,8 @@
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file" id="fileInput3"
-                                                (change)="onFileSelected($event,productobj,3)">
+                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                [id]="productobj.id" (change)="onFileSelected($event,productobj,3)">
                                         </label>
                                     </td>
                                 </tr>
