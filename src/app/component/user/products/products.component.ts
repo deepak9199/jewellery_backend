@@ -38,7 +38,7 @@ export class ProductsComponent {
     images: []
   }
   role: string = ''
-  private globle_retailji_product_list: product_retailji_selected[] = []
+  globle_retailji_product_list: product_retailji_selected[] = []
   private sub_retailji_get: Subscription | undefined
   private sub_cat_get: Subscription | undefined
   private sub_sub_cat_get: Subscription | undefined
@@ -194,6 +194,26 @@ export class ProductsComponent {
     }
 
   }
+  getnameProductRetailji(data: product_retailji_selected[], id: string): string {
+    let list = data.filter((item: product_retailji_selected) => item.id.toString() === id)
+    if (list.length != 0) {
+      return list[0].item_name
+    }
+    else {
+      console.error('get name not found')
+      return ''
+    }
+  }
+  getname(data: any[], id: string): string {
+    let list = data.filter((item: any) => item.id === id)
+    if (list.length != 0) {
+      return list[0].name
+    }
+    else {
+      console.error('get name not found')
+      return ''
+    }
+  }
   private updateproductapi(data: product_detail) {
     this.loading = true
     this.sub_product_update = this.collection.updateDocument('product', data.id, data).subscribe({
@@ -223,7 +243,7 @@ export class ProductsComponent {
       next: (data: category_detail[]) => {
         this.category = data
         this.get_sub_cat_api()
-        this.loading = false
+
       },
       error: (err) => {
         console.error(err)
@@ -237,7 +257,6 @@ export class ProductsComponent {
       next: (data: sub_category_detail[]) => {
         this.sub_category = data
         this.get_product_retailji()
-        this.loading = false
       },
       error: (err) => {
         console.error(err)
@@ -340,7 +359,6 @@ export class ProductsComponent {
           this.product_retailji_selected.push(obj)
         })
         this.globle_retailji_product_list = this.product_retailji_selected
-        this.loading = false
       },
       error: (err) => {
         console.log(err)

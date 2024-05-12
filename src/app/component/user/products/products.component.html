@@ -80,19 +80,19 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let productobj of product_details_selected;let i=index">
-                                    <td>
+                                    <td class="align-middle">
                                         <input #selectProductOneByone type="checkbox" id="selectedndeselected"
                                             (click)="selectOneByOne(selectProductOneByone.checked,productobj,i)"
                                             [checked]="productobj.checked">
                                     </td>
-                                    <td>
-                                        {{productobj.category_id}}
+                                    <td class="align-middle">
+                                        {{getname(category,productobj.category_id)}}
                                     </td>
-                                    <td>
-                                        {{productobj.retailji_product_id}}
+                                    <td class="align-middle">
+                                        {{getnameProductRetailji(globle_retailji_product_list,productobj.retailji_product_id)}}
                                     </td>
-                                    <td>
-                                        {{productobj.sub_category_id}}
+                                    <td class="align-middle">
+                                        {{getname(sub_category,productobj.sub_category_id)}}
                                     </td>
                                     <td>
                                         <label *ngIf="role=='admin'" for="fileInput" class="upload-btn ml10">

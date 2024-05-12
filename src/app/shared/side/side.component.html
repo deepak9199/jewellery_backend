@@ -24,7 +24,7 @@
             <li *ngIf="role=='admin'" class="active" (mouseenter)="addHoverClass(createUserLi)"
                 (mouseleave)="removeHoverClass(createUserLi)" #createUserLi (click)="setActive(createUserLi)"
                 [class.active]="isActive(createUserLi)">
-                <a [routerLink]="['/admin/product']"><i class="fa fa-users"></i><span> Producrts </span></a>
+                <a [routerLink]="['/admin/product']"><i class="fa fa-cubes"></i><span> Producrts </span></a>
             </li>
             <li *ngIf="role=='admin'" class="active" (mouseenter)="addHoverClass(createUserLi)"
                 (mouseleave)="removeHoverClass(createUserLi)" #createUserLi (click)="setActive(createUserLi)"
