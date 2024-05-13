@@ -34,6 +34,7 @@ export class BannerComponent {
   }
   role: string = ''
   testimonials_seleted: banner_details_selected[] = []
+  progressbar: number = 0
   private sub_testimonials_get: Subscription | undefined
   private sub_testimonials_del: Subscription | undefined
   private sub_testimonials_update: Subscription | undefined
@@ -91,6 +92,55 @@ export class BannerComponent {
       checked: event
     }
     this.testimonials_seleted[index] = obj
+  }
+  openModal() {
+    const modal = this.el.nativeElement.querySelector('#model-progress-bar');
+    this.renderer.addClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'block');
+  }
+  closeModal() {
+    const modal = this.el.nativeElement.querySelector('#model-progress-bar');
+    this.renderer.removeClass(modal, 'show');
+    this.renderer.setStyle(modal, 'display', 'none');
+  }
+  onFileSelected(event: any, data: banner, imageindex: number) {
+    if (data.name != '') {
+      const file: File = event.target.files[0];
+      this.openModal()
+      if (file) {
+        this.collection.uploadFile(file, 'users/' + this.token.getUser().uid + '/banner').subscribe(
+          (progress) => {
+            if (progress != null)
+              this.progressbar = progress;
+            if (this.progressbar == 100)
+              this.closeModal()
+            // console.log('Upload progress:', progress);
+          },
+          (error) => {
+            this.toster.error('Upload error:', error);
+            this.closeModal()
+          },
+          () => {
+            console.log('Upload complete');
+            this.collection.getDownloadUrl('users/' + this.token.getUser().uid + '/banner/' + file.name).subscribe(
+              (url) => {
+                console.log('Download URL:', url);
+                data.image = url
+                this.add_test_api(data)
+              },
+              (error) => {
+                console.error('Error getting download URL:', error);
+              }
+            );
+          }
+        );
+      }
+      else {
+        this.toster.error('Please Enter Banner Name')
+      }
+
+    }
+
   }
   private get_test_api() {
     this.loading = true

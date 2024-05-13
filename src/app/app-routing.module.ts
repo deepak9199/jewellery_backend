@@ -11,6 +11,7 @@ import { CetagoryMasterComponent } from './component/user/category/cetagory-mast
 import { OrdersComponent } from './component/user/orders/orders.component';
 import { TestimonialsComponent } from './component/user/testimonials/testimonials.component';
 import { SubCategoryMasterComponent } from './component/user/category/sub-category-master/sub-category-master.component';
+import { BannerComponent } from './component/user/banner/banner.component';
 
 const routes: Routes = [
   {
@@ -53,7 +54,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'admin/banner', component: TestimonialsComponent, canActivate: [AuthGuard], data: {
+    path: 'admin/banner', component: BannerComponent, canActivate: [AuthGuard], data: {
       role: 'admin'
     }
   },

@@ -18,20 +18,25 @@
             <!-- forms 2 -->
             <div class="card card_border py-2 mb-4">
                 <div class="card-body">
-                    <form #myfromcreate=ngForm (ngSubmit)="create(); myfromcreate.reset()">
+                    <form #myfromcreate=ngForm (ngSubmit)=" myfromcreate.reset()">
                         <div class="form-row">
                             <div class="form-group col-md-3">
                                 <input [(ngModel)]="form_testimonials.name" #name="ngModel" name="name" required
                                     type="text" class="form-control input-style" id="name" placeholder="Enter name">
                             </div>
                             <div class="form-group col-md-3">
-                                <input [(ngModel)]="form_testimonials.image" #comment="ngModel" name="comment" required
-                                    type="text" class="form-control input-style" id="comment"
-                                    placeholder="Enter comment">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <button [disabled]="myfromcreate.invalid" type="submit" id="catcreate"
-                                    class="btn btn-primary btn-style ">Create</button>
+                                <label *ngIf="role=='admin'" for="uploade_image" class="upload-btn ml10">
+                                    <div class="profile-img mb20-sm">
+                                        <!-- Button to trigger file input -->
+                                        <button [disabled]="myfromcreate.invalid" type="button"
+                                            class="btn btn-primary btn-block input-style" (click)="fileInput.click()">
+                                            Upload Image
+                                        </button>
+                                        <!-- Hidden file input -->
+                                        <input #fileInput accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                            id="uploade_image" (change)="onFileSelected($event, form_testimonials, 0)">
+                                    </div>
+                                </label>
                             </div>
                         </div>
                     </form>
@@ -43,10 +48,10 @@
             <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
                     <div class="table-main">
-                        <table id="documents-table" class="table">
+                        <table id="documents-table" class="table table-responsive-lg">
                             <thead class="sub-titles">
                                 <tr>
-                                    <th scope="col">
+                                    <th scope="col" style="width: 60px;">
                                         <input #selectallproduct type="checkbox" id="selectedndeselected"
                                             (click)="selectAll(selectallproduct.checked)">
                                         <i data-toggle="modal" data-target="#model-delete-all" id='deleteid'
@@ -54,27 +59,31 @@
                                     </th>
                                     <th>S/n</th>
                                     <th>Name</th>
-                                    <th>Comment</th>
+                                    <th>Image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let catobj of testimonials_seleted  ;let i=index">
-                                    <td>
+                                    <td class="align-middle">
                                         <input #selcetOneByonedate
                                             (click)="selectOneByOne(selcetOneByonedate.checked,catobj,i)"
                                             type="checkbox" [checked]="catobj.checked" id="selectedndeselected">
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         {{i+1}}
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         {{catobj.name}}
                                     </td>
-                                    <td>
-                                        {{catobj.image}}
+                                    <td class="align-middle">
+                                        <div class="profile-img mb20-sm">
+                                            <img alt="profile" loading="lazy" width="71" height="71" decoding="async"
+                                                data-nimg="1" class="wa-xs" src="{{catobj.image}}"
+                                                style="color: transparent; height: 50px; width: 71px; object-fit: contain;">
+                                        </div>
                                     </td>
-                                    <td style="width: 300px;">
+                                    <td class="align-middle" style="width: 300px;">
                                         <div class="row">
                                             <div *ngIf="role=='admin'" class="col-lg-2">
                                                 <button (click)="selectDeleteID(catobj)" type="button"
@@ -202,6 +211,31 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- progress bar -->
+<div class="card-body">
+    <!-- Modal -->
+    <div class="modal fade" id="model-progress-bar" tabindex="-1" role="dialog" aria-labelledby="complaindelete"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" [style.width.%]="progressbar"
+                            [attr.aria-valuenow]="progressbar" [attr.aria-valuemin]="0" [attr.aria-valuemax]="100">
+                            {{ progressbar | number:'1.2-2' }}% Complete (info)
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
