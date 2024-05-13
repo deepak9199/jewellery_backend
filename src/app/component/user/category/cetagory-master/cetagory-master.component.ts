@@ -42,7 +42,7 @@ export class CetagoryMasterComponent {
     private token: TokenStorageService,
     private sharedService: SharedService
   ) { }
-
+  
   ngOnInit() {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]

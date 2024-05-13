@@ -53,6 +53,11 @@ const routes: Routes = [
     }
   },
   {
+    path: 'admin/banner', component: TestimonialsComponent, canActivate: [AuthGuard], data: {
+      role: 'admin'
+    }
+  },
+  {
     path: '', redirectTo: '/login', pathMatch: 'full'
   },
   {

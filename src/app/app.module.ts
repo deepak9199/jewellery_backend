@@ -26,6 +26,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { AuthGuard } from './shared/_guards/guard';
 import { OrdersComponent } from './component/user/orders/orders.component';
 import { SubCategoryMasterComponent } from './component/user/category/sub-category-master/sub-category-master.component';
+import { BannerComponent } from './component/user/banner/banner.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { SubCategoryMasterComponent } from './component/user/category/sub-catego
     LogoutComponent,
     FooterComponent,
     OrdersComponent,
-    SubCategoryMasterComponent
+    SubCategoryMasterComponent,
+    BannerComponent
   ],
   imports: [
     BrowserModule,

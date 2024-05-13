@@ -42,6 +42,12 @@
                 <a [routerLink]="['/admin/testimonials']"><i class="fa fa-comment"></i><span> Testimonials
                     </span></a>
             </li>
+            <li *ngIf="role=='admin'" class="active" (mouseenter)="addHoverClass(createUserLi)"
+                (mouseleave)="removeHoverClass(createUserLi)" #createUserLi (click)="setActive(createUserLi)"
+                [class.active]="isActive(createUserLi)">
+                <a [routerLink]="['/admin/testimonials']"><i class="fa fa-object-ungroup"></i><span> Banner
+                    </span></a>
+            </li>
         </ul>
         <!-- //sidebar nav end -->
         <!-- toggle button start -->
