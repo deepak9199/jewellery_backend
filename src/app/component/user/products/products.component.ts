@@ -70,6 +70,7 @@ export class ProductsComponent {
       this.role = this.token.getUser().role[0]
     // this.get_cat_sub_product_api();
     this.get_cat_api()
+    this.get_product_retailji()
   }
   openDialog(image: string): void {
     const dialogRef = this.dialog.open(ImagePopUpComponent, {
@@ -300,7 +301,8 @@ export class ProductsComponent {
     this.sub_cat_get = this.collection.getData('sub-category').subscribe({
       next: (data: sub_category_detail[]) => {
         this.sub_category = data
-        this.get_product_retailji()
+        // this.get_product_retailji()
+        this.get_product_api()
       },
       error: (err) => {
         console.error(err)
@@ -338,7 +340,7 @@ export class ProductsComponent {
     this.loading = true
     this.sub_retailji_get = this.apicall.getRetailjiProducts().subscribe({
       next: (data: product_retailji[]) => {
-        this.get_product_api()
+        // this.get_product_api()
         const transformedArray = data.map((item: product_retailji) => {
           return {
             id: item.id,
