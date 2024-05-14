@@ -27,7 +27,9 @@ import { AuthGuard } from './shared/_guards/guard';
 import { OrdersComponent } from './component/user/orders/orders.component';
 import { SubCategoryMasterComponent } from './component/user/category/sub-category-master/sub-category-master.component';
 import { BannerComponent } from './component/user/banner/banner.component';
-
+import { ImagePopUpComponent } from './shared/image-pop-up/image-pop-up.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,13 +49,15 @@ import { BannerComponent } from './component/user/banner/banner.component';
     FooterComponent,
     OrdersComponent,
     SubCategoryMasterComponent,
-    BannerComponent
+    BannerComponent,
+    ImagePopUpComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
@@ -61,7 +65,8 @@ import { BannerComponent } from './component/user/banner/banner.component';
   ],
   providers: [
     AuthGuard,
-    provideClientHydration()
+    provideClientHydration(),
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

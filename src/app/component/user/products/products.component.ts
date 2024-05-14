@@ -8,6 +8,8 @@ import { SharedService } from '../../../shared/services/shared.service';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
 import { Router } from '@angular/router';
 import { ApiCallService } from '../../../shared/services/api-call.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
 
 @Component({
   selector: 'app-products',
@@ -59,7 +61,8 @@ export class ProductsComponent {
     private token: TokenStorageService,
     private sharedService: SharedService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -67,6 +70,11 @@ export class ProductsComponent {
       this.role = this.token.getUser().role[0]
     // this.get_cat_sub_product_api();
     this.get_cat_api()
+  }
+  openDialog(image: string): void {
+    const dialogRef = this.dialog.open(ImagePopUpComponent, {
+      data: { imagesselected: image }
+    });
   }
   addproduct() {
     let list: product_retailji_selected[] = this.product_retailji_selected.filter((item: product_retailji_selected) => item.checked == true)

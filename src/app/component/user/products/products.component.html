@@ -100,42 +100,61 @@
                                         <label *ngIf="role=='admin'" [for]="productobj.id+0" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
-                                                <img *ngIf="!isimage(productobj.images[0])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                <img *ngIf="!isimage(productobj.images[0])" (click)="fileInput.click()"
+                                                    alt="profile" loading="lazy" width="71" height="71" decoding="async"
+                                                    data-nimg="1" class="rounded-circle wa-xs"
+                                                    src="assets/user033f.jpeg"
                                                     style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
                                                 <!-- Second image tag -->
-                                                <img *ngIf="isimage(productobj.images[0])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="{{productobj.images[0]}}"
-                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                                <div class="image-container">
+                                                    <img *ngIf="isimage(productobj.images[0])" width="71" height="71"
+                                                        decoding="async" data-nimg="1" class="wa-xs"
+                                                        src="{{productobj.images[0]}}"
+                                                        style="color: transparent; height: 71px; width: 71px; object-fit: contain;"
+                                                        class="product-image">
+                                                    <div class="overlay-icons">
+                                                        <i (click)="openDialog(productobj.images[0])"
+                                                            class="fa fa-eye"></i>
+                                                        <i (click)="fileInput.click()" alt="profile" loading="lazy"
+                                                            class="fa fa-plus"></i>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id+0" (change)="onFileSelected($event,productobj,0)">
+                                            <input #fileInput accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                (change)="onFileSelected($event,productobj,0)">
                                         </label>
                                     </td>
                                     <td>
                                         <label *ngIf="role=='admin'" [for]="productobj.id+1" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
-                                                <img *ngIf="!isimage(productobj.images[1])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="assets/user033f.jpeg"
+                                                <img *ngIf="!isimage(productobj.images[1])" (click)="fileInput.click()"
+                                                    alt="profile" loading="lazy" width="71" height="71" decoding="async"
+                                                    data-nimg="1" class="rounded-circle wa-xs"
+                                                    src="assets/user033f.jpeg"
                                                     style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
                                                 <!-- Second image tag -->
-                                                <img *ngIf="isimage(productobj.images[1])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="{{productobj.images[1]}}"
-                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                                <div class="image-container">
+                                                    <img *ngIf="isimage(productobj.images[1])" width="71" height="71"
+                                                        decoding="async" data-nimg="1" class="wa-xs"
+                                                        src="{{productobj.images[1]}}"
+                                                        style="color: transparent; height: 71px; width: 71px; object-fit: contain;"
+                                                        class="product-image">
+                                                    <div class="overlay-icons">
+                                                        <i (click)="openDialog(productobj.images[1])"
+                                                            class="fa fa-eye"></i>
+                                                        <i (click)="fileInput.click()" alt="profile" loading="lazy"
+                                                            class="fa fa-plus"></i>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id+1" (change)="onFileSelected($event,productobj,1)">
+                                            <input #fileInput accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                (change)="onFileSelected($event,productobj,1)">
                                         </label>
                                     </td>
                                     <td>
@@ -143,42 +162,63 @@
                                         <label *ngIf="role=='admin'" [for]="productobj.id+2" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
-                                                <img *ngIf="!isimage(productobj.images[2])" alt="profile" loading="lazy"
+                                                <img *ngIf="!isimage(productobj.images[2])" (click)="fileInput.click()"
                                                     width="71" height="71" decoding="async" data-nimg="1"
                                                     class="rounded-circle wa-xs" src="assets/user033f.jpeg"
                                                     style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
                                                 <!-- Second image tag -->
-                                                <img *ngIf="isimage(productobj.images[2])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="{{productobj.images[2]}}"
-                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                                <div class="image-container">
+                                                    <img *ngIf="isimage(productobj.images[2])"
+                                                        (dblclick)="fileInput.click()" alt="profile" loading="lazy"
+                                                        width="71" height="71" decoding="async" data-nimg="1"
+                                                        class="wa-xs" src="{{productobj.images[2]}}"
+                                                        style="color: transparent; height: 71px; width: 71px; object-fit: contain;"
+                                                        class="product-image">
+                                                    <div class="overlay-icons">
+                                                        <i (click)="openDialog(productobj.images[2])"
+                                                            class="fa fa-eye"></i>
+                                                        <i (click)="fileInput.click()" alt="profile" loading="lazy"
+                                                            class="fa fa-plus"></i>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id+2" (change)="onFileSelected($event,productobj,2)">
+                                            <input #fileInput accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                (change)="onFileSelected($event,productobj,2)">
                                         </label>
                                     </td>
                                     <td>
                                         <label *ngIf="role=='admin'" [for]="productobj.id+3" class="upload-btn ml10">
                                             <div class="profile-img mb20-sm">
                                                 <!-- First image tag -->
-                                                <img *ngIf="!isimage(productobj.images[3])" alt="profile" loading="lazy"
+                                                <img *ngIf="!isimage(productobj.images[3])"
+                                                    (dblclick)="fileInput.click()" alt="profile" loading="lazy"
                                                     width="71" height="71" decoding="async" data-nimg="1"
                                                     class="rounded-circle wa-xs" src="assets/user033f.jpeg"
                                                     style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
 
                                                 <!-- Second image tag -->
-                                                <img *ngIf="isimage(productobj.images[3])" alt="profile" loading="lazy"
-                                                    width="71" height="71" decoding="async" data-nimg="1"
-                                                    class="rounded-circle wa-xs" src="{{productobj.images[3]}}"
-                                                    style="color: transparent; height: 71px; width: 71px; object-fit: cover;">
+                                                <div class="image-container">
+                                                    <img *ngIf="isimage(productobj.images[3])"
+                                                        (click)="fileInput.click()" width="71" height="71"
+                                                        decoding="async" data-nimg="1" class="wa-xs"
+                                                        src="{{productobj.images[3]}}"
+                                                        style="color: transparent; height: 71px; width: 71px; object-fit: contain;"
+                                                        class="product-image">
+                                                    <div class="overlay-icons">
+                                                        <i (click)="openDialog(productobj.images[3])"
+                                                            class="fa fa-eye"></i>
+                                                        <i (click)="fileInput.click()" alt="profile" loading="lazy"
+                                                            class="fa fa-plus"></i>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <!-- Hidden file input -->
-                                            <input accept=".png, .jpg, .jpeg" class="d-none" type="file"
-                                                [id]="productobj.id+3" (change)="onFileSelected($event,productobj,3)">
+                                            <input #fileInput accept=".png, .jpg, .jpeg" class="d-none" type="file"
+                                                (change)="onFileSelected($event,productobj,3)">
                                         </label>
                                     </td>
                                 </tr>
