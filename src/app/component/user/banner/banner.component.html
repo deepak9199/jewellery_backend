@@ -78,8 +78,9 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="profile-img mb20-sm">
-                                            <img alt="profile" loading="lazy" width="71" height="71" decoding="async"
-                                                data-nimg="1" class="wa-xs" src="{{catobj.image}}"
+                                            <img (click)="openDialog(catobj.image)" alt="profile" loading="lazy"
+                                                width="71" height="71" decoding="async" data-nimg="1" class="wa-xs"
+                                                src="{{catobj.image}}"
                                                 style="color: transparent; height: 50px; width: 71px; object-fit: contain;">
                                         </div>
                                     </td>

@@ -7,6 +7,8 @@ import { CollectionService } from '../../../shared/services/collection.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
 
 @Component({
   selector: 'app-banner',
@@ -47,12 +49,18 @@ export class BannerComponent {
     private token: TokenStorageService,
     private sharedService: SharedService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private dialog: MatDialog
   ) { }
   ngOnInit() {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
     this.get_test_api()
+  }
+  openDialog(image: string): void {
+    const dialogRef = this.dialog.open(ImagePopUpComponent, {
+      data: { imagesselected: image }
+    });
   }
   create() {
     this.add_test_api(this.form_testimonials)
