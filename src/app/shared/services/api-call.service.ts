@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, filter, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +8,29 @@ import { Observable } from 'rxjs';
 export class ApiCallService {
   constructor(private http: HttpClient) { }
 
-  // Example function to fetch data from the API
   getRetailjiProducts(): Observable<any> {
-    return this.http.post("https://node.express.tensoftware.in", { type: "jewellers" });
+    const url = "https://node.express.tensoftware.in";
+    const body = { type: "jewellers" };
+
+    const req = new HttpRequest('POST', url, body, {
+      reportProgress: true
+    });
+
+    return this.http.request(req).pipe(
+      filter(event => event.type === HttpEventType.DownloadProgress || event.type === HttpEventType.Response),
+      map(event => this.getEventMessage(event)),
+      catchError(error => of({ progress: 100, data: null, error }))
+    );
+  }
+
+  private getEventMessage(event: HttpEvent<any>) {
+    switch (event.type) {
+      case HttpEventType.DownloadProgress:
+        return { progress: Math.round(100 * event.loaded / (event.total ?? event.loaded)), data: null };
+      case HttpEventType.Response:
+        return { progress: 100, data: event.body };
+      default:
+        return { progress: 0, data: null };
+    }
   }
 }

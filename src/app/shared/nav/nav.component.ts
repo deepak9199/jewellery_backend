@@ -6,6 +6,9 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { users } from '../model/user';
+import { product_retailji } from '../model/product';
+import { ApiCallService } from '../services/api-call.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +16,7 @@ import { users } from '../model/user';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+  loadingproduct: boolean = false
   formUser: users = {
     contact: '',
     createdTime: '',
@@ -27,7 +31,9 @@ export class NavComponent {
     private collection: CollectionService,
     private toster: ToastrService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private apicall: ApiCallService,
+    private messageservice: MessageService
   ) { }
   ngOnInit() {
     // this.checkip()
@@ -35,6 +41,7 @@ export class NavComponent {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
     this.getuserapi()
+    // this.get_product_retailji()
   }
   private getattendance() {
     this.collection.getData('attendance').subscribe({
@@ -129,6 +136,53 @@ export class NavComponent {
       error: (err) => {
         console.error(err)
 
+      }
+    })
+  }
+  private get_product_retailji() {
+    this.loadingproduct = true
+    this.apicall.getRetailjiProducts().subscribe({
+      next: (data: product_retailji[]) => {
+        // this.get_product_api()
+        const transformedArray = data.map((item: product_retailji) => {
+          return {
+            id: item.id,
+            item_code: item.item_code,
+            item_name: item.item_name,
+            pcs: item.pcs,
+            basic_rate: item.basic_rate,
+            purchase_rate: item.purchase_rate,
+            sale_rate: item.sale_rate,
+            mrp: item.mrp,
+            huid: item.huid,
+            design: item.design,
+            supplier_id: item.supplier_id,
+            brand_id: item.brand_id,
+            purity: item.purity,
+            bill_no: item.bill_no,
+            gwt: item.gwt,
+            nwt: item.nwt,
+            making_per_gm: item.making_per_gm,
+            making: item.making,
+            dia_val: item.dia_val,
+            stone_val: item.stone_val,
+            hallmark: item.hallmark,
+            image1: item.image1,
+            barcode: item.barcode,
+            dia_detail: item.dia_detail,
+            stone_detail: item.stone_detail,
+            sku: item.sku,
+            itemno: item.itemno,
+            checked: false
+          }
+        })
+        console.log(transformedArray)
+        this.messageservice.setmessage(JSON.stringify(transformedArray))
+        this.loadingproduct = false
+      },
+      error: (err) => {
+        console.log(err)
+        this.loadingproduct = false
       }
     })
   }

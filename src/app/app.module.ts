@@ -30,6 +30,7 @@ import { BannerComponent } from './component/user/banner/banner.component';
 import { ImagePopUpComponent } from './shared/image-pop-up/image-pop-up.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
+import { LoadingProductComponent } from './shared/loading-product/loading-product.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +51,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     OrdersComponent,
     SubCategoryMasterComponent,
     BannerComponent,
-    ImagePopUpComponent
+    ImagePopUpComponent,
+    LoadingProductComponent
   ],
   imports: [
     BrowserModule,

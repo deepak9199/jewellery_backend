@@ -8,6 +8,9 @@
 
                 <div class="profile_details">
                     <ul>
+                        <li *ngIf="loadingproduct">
+                            <app-loading-product></app-loading-product>
+                        </li>
                         <li class="dropdown profile_details_drop">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenu3"
                                 aria-haspopup="true" aria-expanded="false">

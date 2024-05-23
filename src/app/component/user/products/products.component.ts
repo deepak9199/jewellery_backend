@@ -1,7 +1,7 @@
 import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { product, product_detail, product_detail_selected, product_retailji, product_retailji_selected } from '../../../shared/model/product';
 import { category_detail, sub_category_detail } from '../../../shared/model/category';
-import { Subscriber, Subscription, first } from 'rxjs';
+import { Subscriber, Subscription, first, interval, takeWhile } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CollectionService } from '../../../shared/services/collection.service';
 import { SharedService } from '../../../shared/services/shared.service';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ApiCallService } from '../../../shared/services/api-call.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
+import { MessageService } from '../../../shared/services/message.service';
 
 @Component({
   selector: 'app-products',
@@ -18,6 +19,7 @@ import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.c
 })
 export class ProductsComponent {
   loading: boolean = false
+  loadingproduct: boolean = false
   category: category_detail[] = []
   sub_category: sub_category_detail[] = []
   sub_category_change: sub_category_detail[] = []
@@ -42,6 +44,7 @@ export class ProductsComponent {
     createdTime: ''
   }
   progressbar: number = 0
+  progressbarretailji: number = 0
   role: string = ''
   globle_retailji_product_list: product_retailji_selected[] = []
   private sub_retailji_get: Subscription | undefined
@@ -62,6 +65,7 @@ export class ProductsComponent {
     private sharedService: SharedService,
     private renderer: Renderer2,
     private el: ElementRef,
+    private message: MessageService,
     public dialog: MatDialog,
   ) { }
 
@@ -91,6 +95,7 @@ export class ProductsComponent {
     this.add_product_api(transformedList)
   }
   changesubcat() {
+    this.select_sub_cate_id = ''
     this.sub_category_change = this.sub_category.filter((item: sub_category_detail) => item.category_id === this.select_cate_id)
   }
   selectAllRetailjiProducts(event: boolean) {
@@ -287,6 +292,7 @@ export class ProductsComponent {
     this.sub_cat_get = this.collection.getData('category').subscribe({
       next: (data: category_detail[]) => {
         this.category = data
+        this.category = this.category.sort((a, b) => a.name.localeCompare(b.name));
         this.get_sub_cat_api()
 
       },
@@ -301,6 +307,7 @@ export class ProductsComponent {
     this.sub_cat_get = this.collection.getData('sub-category').subscribe({
       next: (data: sub_category_detail[]) => {
         this.sub_category = data
+        this.sub_category = this.sub_category.sort((a, b) => a.name.localeCompare(b.name));
         // this.get_product_retailji()
         this.get_product_api()
       },
@@ -326,6 +333,7 @@ export class ProductsComponent {
           };
         });
         this.product_details_selected = transformedArray
+        this.product_details_selected = this.product_details_selected.sort((a, b) => this.getnameProductRetailji(this.globle_retailji_product_list, a.retailji_product_id).localeCompare(this.getnameProductRetailji(this.globle_retailji_product_list, b.retailji_product_id)));
         // console.log(this.product_details_selected)
         this.refresh_Retailji_product(this.product_details_selected)
         this.loading = false
@@ -337,50 +345,67 @@ export class ProductsComponent {
     })
   }
   private get_product_retailji() {
-    this.loading = true
+    this.startProgressSimulation()
+    this.loadingproduct = true
     this.sub_retailji_get = this.apicall.getRetailjiProducts().subscribe({
-      next: (data: product_retailji[]) => {
-        // this.get_product_api()
-        const transformedArray = data.map((item: product_retailji) => {
-          return {
-            id: item.id,
-            item_code: item.item_code,
-            item_name: item.item_name,
-            pcs: item.pcs,
-            basic_rate: item.basic_rate,
-            purchase_rate: item.purchase_rate,
-            sale_rate: item.sale_rate,
-            mrp: item.mrp,
-            huid: item.huid,
-            design: item.design,
-            supplier_id: item.supplier_id,
-            brand_id: item.brand_id,
-            purity: item.purity,
-            bill_no: item.bill_no,
-            gwt: item.gwt,
-            nwt: item.nwt,
-            making_per_gm: item.making_per_gm,
-            making: item.making,
-            dia_val: item.dia_val,
-            stone_val: item.stone_val,
-            hallmark: item.hallmark,
-            image1: item.image1,
-            barcode: item.barcode,
-            dia_detail: item.dia_detail,
-            stone_detail: item.stone_detail,
-            sku: item.sku,
-            itemno: item.itemno,
-            checked: false
-          }
-        })
-        this.product_retailji_selected = transformedArray
-        this.globle_retailji_product_list = this.product_retailji_selected
+      next: (event: any) => {
+        if (event.progress !== undefined) {
+          this.progressbarretailji = event.progress;
+        }
+        if (event.data) {
+          const transformedArray = event.data.map((item: product_retailji) => {
+            return {
+              id: item.id,
+              item_code: item.item_code,
+              item_name: item.item_name,
+              pcs: item.pcs,
+              basic_rate: item.basic_rate,
+              purchase_rate: item.purchase_rate,
+              sale_rate: item.sale_rate,
+              mrp: item.mrp,
+              huid: item.huid,
+              design: item.design,
+              supplier_id: item.supplier_id,
+              brand_id: item.brand_id,
+              purity: item.purity,
+              bill_no: item.bill_no,
+              gwt: item.gwt,
+              nwt: item.nwt,
+              making_per_gm: item.making_per_gm,
+              making: item.making,
+              dia_val: item.dia_val,
+              stone_val: item.stone_val,
+              hallmark: item.hallmark,
+              image1: item.image1,
+              barcode: item.barcode,
+              dia_detail: item.dia_detail,
+              stone_detail: item.stone_detail,
+              sku: item.sku,
+              itemno: item.itemno,
+              checked: false
+            }
+          })
+          // console.log(transformedArray)
+          this.product_retailji_selected = transformedArray
+          this.product_retailji_selected = this.product_retailji_selected.sort((a, b) => a.item_name.localeCompare(b.item_name));
+          this.globle_retailji_product_list = this.product_retailji_selected
+          this.loadingproduct = false
+          this.progressbarretailji = 100;
+        }
       },
       error: (err) => {
         console.log(err)
-        this.loading = false
+        this.loadingproduct = false
       }
     })
+
+  }
+  startProgressSimulation() {
+    interval(700).pipe(
+      takeWhile(() => this.progressbarretailji < 90)
+    ).subscribe(() => {
+      this.progressbarretailji += 1;
+    });
   }
   private add_product_api(data: product[]) {
     this.loading = true
@@ -401,40 +426,6 @@ export class ProductsComponent {
       this.product_retailji_selected = this.product_retailji_selected.filter((item_r: product_retailji_selected) => item_r.id.toString() != item.retailji_product_id)
     })
   }
-  // private async get_cat_sub_product_api() {
-  //   try {
-  //     this.loading = true;
-
-  //     const categoryData = await this.collection.getData('category').pipe(first()).toPromise();
-  //     this.category = categoryData || [];
-
-  //     const subCategoryData = await this.collection.getData('sub-category').pipe(first()).toPromise();
-  //     this.sub_category = subCategoryData || [];
-
-  //     const productData = await this.collection.getData('product').pipe(first()).toPromise();
-  //     if (productData) {
-  //       const transformedArray = productData.map((item: product_detail) => {
-  //         return {
-  //           id: item.id,
-  //           retailji_product_id: item.retailji_product_id,
-  //           category_id: item.category_id,
-  //           sub_category_id: item.sub_category_id,
-  //           images: item.images,
-  //           checked: false
-  //         };
-  //       });
-  //       this.product_details_selected = transformedArray;
-  //       this.refresh_Retailji_product(this.product_details_selected);
-  //     } else {
-  //       this.product_details_selected = [];
-  //     }
-
-  //     this.loading = false;
-  //   } catch (err) {
-  //     console.error(err);
-  //     this.loading = false;
-  //   }
-  // }
   ngOnDestroy() {
     this.sub_retailji_get?.unsubscribe();
     this.sub_cat_get?.unsubscribe();

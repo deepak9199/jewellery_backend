@@ -42,7 +42,7 @@ export class CetagoryMasterComponent {
     private token: TokenStorageService,
     private sharedService: SharedService
   ) { }
-  
+
   ngOnInit() {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
@@ -123,6 +123,7 @@ export class CetagoryMasterComponent {
         this.selected_category = []
         const array = data.map((item: category_detail) => { return { id: item.id, name: item.name, createDate: item.createDate, checked: false } })
         this.selected_category = array
+        this.selected_category = this.selected_category.sort((a, b) => a.name.localeCompare(b.name));
         this.loading = false
       },
       error: (err) => {

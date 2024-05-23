@@ -151,6 +151,7 @@ export class SubCategoryMasterComponent {
           }
         })
         this.selected_category = array
+        this.selected_category = this.selected_category.sort((a, b) => a.name.localeCompare(b.name));
         this.loading = false
       },
       error: (err) => {
