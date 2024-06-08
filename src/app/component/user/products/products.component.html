@@ -56,8 +56,8 @@
             <!-- table -->
             <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
-                    <div class="table-main">
-                        <table id="documents-table" class="table table-responsive-lg">
+                    <div class="table-main table-responsive">
+                        <table id="documents-table" class="table ">
                             <thead class="sub-titles">
                                 <tr>
                                     <th scope="col">
@@ -69,9 +69,12 @@
                                         </div>
                                     </th>
                                     <th>S/n</th>
-                                    <th>Cetagory</th>
+                                    <th>category</th>
+                                    <th>Sub subcategory</th>
                                     <th>Name</th>
-                                    <th>sub-Cetagory</th>
+                                    <th>Sku Code</th>
+                                    <th>Dis %</th>
+                                    <th>mc/g</th>
                                     <th>Img-1</th>
                                     <th>Img-2</th>
                                     <th>Img-3</th>
@@ -90,10 +93,25 @@
                                         {{getname(category,productobj.category_id)}}
                                     </td>
                                     <td class="align-middle">
-                                        {{getnameProductRetailji(globle_retailji_product_list,productobj.retailji_product_id)}}
+                                        {{getname(sub_category,productobj.sub_category_id)}}
                                     </td>
                                     <td class="align-middle">
-                                        {{getname(sub_category,productobj.sub_category_id)}}
+                                        {{productobj.name}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{productobj.sku_code}}
+                                    </td>
+                                    <td class="align-middle" style="width: 100px;">
+                                        <input #dis="ngModel" name="dis" type="number" class="form-control input-style"
+                                            id="dis" placeholder="Enter discount %" [(ngModel)]="productobj.discount"
+                                            (keyup.enter)="updatedetail(productobj)">
+
+                                    </td>
+                                    <td class="align-middle" style="width: 110px">
+                                        <input #mpg="ngModel" name="mpg" type="number" class="form-control input-style"
+                                            id="mpg" placeholder="Enter making per gram"
+                                            [(ngModel)]="productobj.mc_per_g" (keyup.enter)="updatedetail(productobj)">
+
                                     </td>
                                     <td>
                                         <label *ngIf="role=='admin'" [for]="productobj.id+0" class="upload-btn ml10">

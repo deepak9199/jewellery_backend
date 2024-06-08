@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, NgZone, Renderer2 } from '@angular/core';
 import { product, product_detail, product_detail_selected, product_retailji, product_retailji_selected } from '../../../shared/model/product';
 import { category_detail, sub_category_detail } from '../../../shared/model/category';
 import { Subscriber, Subscription, first, interval, takeWhile } from 'rxjs';
@@ -33,7 +33,14 @@ export class ProductsComponent {
     category_id: '',
     sub_category_id: '',
     images: [],
-    createdTime: ''
+    createdTime: '',
+    name: '',
+    sku_code: '',
+    discount: 0,
+    mc_per_g: 0,
+    amount: 0,
+    discription: '',
+    related_items: []
   }
   deleteobj: product_detail = {
     id: '',
@@ -41,7 +48,14 @@ export class ProductsComponent {
     category_id: '',
     sub_category_id: '',
     images: [],
-    createdTime: ''
+    createdTime: '',
+    name: '',
+    sku_code: '',
+    discount: 0,
+    mc_per_g: 0,
+    amount: 0,
+    discription: '',
+    related_items: []
   }
   progressbar: number = 0
   progressbarretailji: number = 0
@@ -67,14 +81,23 @@ export class ProductsComponent {
     private el: ElementRef,
     private message: MessageService,
     public dialog: MatDialog,
+    private ngZone: NgZone, // Added NgZone
   ) { }
 
   ngOnInit() {
+    this.ngZone.run(() => {
+      this.start()
+    });
+  }
+  start() {
     if (this.token.getUser().role[0] != null)
       this.role = this.token.getUser().role[0]
     // this.get_cat_sub_product_api();
     this.get_cat_api()
     this.get_product_retailji()
+  }
+  updatedetail(data: product_detail_selected) {
+    this.updateproductapi(data)
   }
   openDialog(image: string): void {
     const dialogRef = this.dialog.open(ImagePopUpComponent, {
@@ -86,9 +109,16 @@ export class ProductsComponent {
     let transformedList = list.map((item: product_retailji_selected) => {
       return {
         retailji_product_id: item.id.toString(),
+        name: item.item_name,
+        sku_code: item.sku,
+        discount: 0,
+        mc_per_g: 0,
+        amount: item.mrp,
+        discription: '',
         category_id: this.select_cate_id,
         sub_category_id: this.select_sub_cate_id,
         images: [],
+        related_items: [],
         createdTime: new Date().toString()
       };
     });
@@ -154,7 +184,14 @@ export class ProductsComponent {
         category_id: item.category_id,
         sub_category_id: item.sub_category_id,
         images: [],
-        createdTime: item.createdTime
+        createdTime: item.createdTime,
+        name: '',
+        sku_code: '',
+        discount: 0,
+        mc_per_g: 0,
+        amount: 0,
+        discription: '',
+        related_items: []
       })
     })
 
@@ -170,7 +207,14 @@ export class ProductsComponent {
       sub_category_id: data.sub_category_id,
       images: data.images,
       checked: event,
-      createdTime: data.createdTime
+      createdTime: data.createdTime,
+      name: '',
+      sku_code: '',
+      discount: 0,
+      mc_per_g: 0,
+      amount: 0,
+      discription: '',
+      related_items: []
     }
     this.product_details_selected[index] = obj
   }
@@ -325,9 +369,16 @@ export class ProductsComponent {
           return {
             id: item.id,
             retailji_product_id: item.retailji_product_id,
+            name: item.name,
+            sku_code: item.sku_code,
+            discount: item.discount,
+            mc_per_g: item.mc_per_g,
+            amount: item.amount,
+            discription: item.discription,
             category_id: item.category_id,
             sub_category_id: item.sub_category_id,
             images: item.images,
+            related_items: item.related_items,
             checked: false,
             createdTime: item.createdTime
           };

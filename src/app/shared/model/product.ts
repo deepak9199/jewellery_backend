@@ -1,24 +1,45 @@
 export interface product {
     retailji_product_id: string
+    name: string
+    sku_code: string
+    discount: number
+    mc_per_g: number
+    amount: number
+    discription: string
     category_id: string
     sub_category_id: string
     images: string[]
+    related_items: string[]
     createdTime: String
 }
 export interface product_detail {
     id: string
     retailji_product_id: string
+    name: string
+    sku_code: string
+    discount: number
+    mc_per_g: number
+    amount: number
+    discription: string
     category_id: string
     sub_category_id: string
     images: string[]
+    related_items: string[]
     createdTime: String
 }
 export interface product_detail_selected {
     id: string
     retailji_product_id: string
+    name: string
+    sku_code: string
+    discount: number
+    mc_per_g: number
+    amount: number
+    discription: string
     category_id: string
     sub_category_id: string
     images: string[]
+    related_items: string[]
     checked: boolean
     createdTime: String
 }
