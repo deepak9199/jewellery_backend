@@ -8,6 +8,7 @@ import { Observable, from, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { switchMap, catchError } from 'rxjs/operators';
 import { forkJoin, throwError } from 'rxjs';
+import { product_detail } from '../model/product';
 
 
 @Injectable({
@@ -27,11 +28,9 @@ export class CollectionService {
       })
     );
   }
-
   getDocumentById(collectionName: string, documentId: string): Observable<any> {
     return this.firestore.collection(collectionName).doc(documentId).valueChanges();
   }
-
   // Function to add a document to a Firestore collection
   addDocumnet(collectionName: string, data: any): Observable<any> {
     return new Observable<any>(observer => {
@@ -74,7 +73,41 @@ export class CollectionService {
       });
     });
   }
+  updateDocumentsArray(collectionName: string, dataArray: any[]): Observable<any[]> {
+    return new Observable<any[]>(observer => {
+      const observables: any = [];
 
+      dataArray.forEach(item => {
+        const { id, ...data } = item;
+
+        // Filter out undefined values
+        const filteredData = Object.fromEntries(
+          Object.entries(data).filter(([_, v]) => v !== undefined)
+        );
+
+        observables.push(new Observable<any>(innerObserver => {
+          this.firestore.collection(collectionName).doc(id).update(filteredData)
+            .then(() => {
+              innerObserver.next({ id, data: filteredData });
+              innerObserver.complete();
+            })
+            .catch(error => {
+              innerObserver.error(error);
+            });
+        }));
+      });
+      // Combining observables using forkJoin
+      forkJoin(observables).subscribe({
+        next: (results: any) => {
+          observer.next(results); // Array of results
+          observer.complete();
+        },
+        error: error => {
+          observer.error(error);
+        }
+      });
+    });
+  }
   deleteDocument(collectionName: string, docId: string): Observable<void> {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).delete()
@@ -88,7 +121,6 @@ export class CollectionService {
         });
     });
   }
-
   updateDocument(collectionName: string, docId: string, data: any): Observable<void> {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).update(data)

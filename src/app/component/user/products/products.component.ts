@@ -11,6 +11,7 @@ import { ApiCallService } from '../../../shared/services/api-call.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
 import { MessageService } from '../../../shared/services/message.service';
+import { testdatad } from '../../../shared/model/testdata';
 
 @Component({
   selector: 'app-products',
@@ -18,6 +19,7 @@ import { MessageService } from '../../../shared/services/message.service';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent {
+
   loading: boolean = false
   loadingproduct: boolean = false
   category: category_detail[] = []
@@ -40,7 +42,8 @@ export class ProductsComponent {
     mc_per_g: 0,
     amount: 0,
     discription: '',
-    related_items: []
+    related_items: [],
+    stoke: 0
   }
   deleteobj: product_detail = {
     id: '',
@@ -55,12 +58,15 @@ export class ProductsComponent {
     mc_per_g: 0,
     amount: 0,
     discription: '',
-    related_items: []
+    related_items: [],
+    stoke: 0
   }
   progressbar: number = 0
   progressbarretailji: number = 0
   role: string = ''
-  globle_retailji_product_list: product_retailji_selected[] = []
+  private globle_retailji_product_list: product_retailji_selected[] = []
+  private retailjilist: product_retailji[] = []
+  private productList: product_detail[] = []
   private sub_retailji_get: Subscription | undefined
   private sub_cat_get: Subscription | undefined
   private sub_sub_cat_get: Subscription | undefined
@@ -68,8 +74,6 @@ export class ProductsComponent {
   private sub_product_del: Subscription | undefined
   private sub_product_update: Subscription | undefined
   private sub_product_add: Subscription | undefined
-
-
   constructor(
     private toster: ToastrService,
     private collection: CollectionService,
@@ -108,16 +112,17 @@ export class ProductsComponent {
     let list: product_retailji_selected[] = this.product_retailji_selected.filter((item: product_retailji_selected) => item.checked == true)
     let transformedList = list.map((item: product_retailji_selected) => {
       return {
-        retailji_product_id: item.id.toString(),
+        retailji_product_id: item.itemno.toString(),
         name: item.item_name,
         sku_code: item.sku,
         discount: 0,
-        mc_per_g: 0,
-        amount: item.mrp,
+        mc_per_g: item.making_per_gm,
+        amount: item.sale_rate,
         discription: '',
         category_id: this.select_cate_id,
         sub_category_id: this.select_sub_cate_id,
         images: [],
+        stoke: item.pcs,
         related_items: [],
         createdTime: new Date().toString()
       };
@@ -160,7 +165,11 @@ export class ProductsComponent {
       stone_detail: item.stone_detail,
       sku: item.sku,
       itemno: item.itemno,
-      checked: event
+      checked: event,
+      makingpergm: 0,
+      makingperct: 0,
+      making_cdp: 0,
+      making_cdr: 0
     }
     this.product_retailji_selected[index] = obj
   }
@@ -191,7 +200,8 @@ export class ProductsComponent {
         mc_per_g: 0,
         amount: 0,
         discription: '',
-        related_items: []
+        related_items: [],
+        stoke: 0
       })
     })
 
@@ -214,7 +224,8 @@ export class ProductsComponent {
       mc_per_g: 0,
       amount: 0,
       discription: '',
-      related_items: []
+      related_items: [],
+      stoke: 0
     }
     this.product_details_selected[index] = obj
   }
@@ -277,7 +288,7 @@ export class ProductsComponent {
     this.renderer.setStyle(modal, 'display', 'none');
   }
   getnameProductRetailji(data: product_retailji_selected[], id: string): string {
-    let list = data.filter((item: product_retailji_selected) => item.id.toString() === id)
+    let list = data.filter((item: product_retailji_selected) => item.itemno.toString() === id)
     if (list.length != 0) {
       return list[0].item_name
     }
@@ -365,6 +376,7 @@ export class ProductsComponent {
     this.loading = true
     this.sub_cat_get = this.collection.getData('product').subscribe({
       next: (data: product_detail[]) => {
+        this.productList = data
         const transformedArray = data.map((item: product_detail) => {
           return {
             id: item.id,
@@ -379,6 +391,7 @@ export class ProductsComponent {
             sub_category_id: item.sub_category_id,
             images: item.images,
             related_items: item.related_items,
+            stoke: item.stoke,
             checked: false,
             createdTime: item.createdTime
           };
@@ -400,10 +413,12 @@ export class ProductsComponent {
     this.loadingproduct = true
     this.sub_retailji_get = this.apicall.getRetailjiProducts().subscribe({
       next: (event: any) => {
+        // console.log(event)
         if (event.progress !== undefined) {
           this.progressbarretailji = event.progress;
         }
         if (event.data) {
+          this.retailjilist = event.data
           const transformedArray = event.data.map((item: product_retailji) => {
             return {
               id: item.id,
@@ -474,7 +489,20 @@ export class ProductsComponent {
   private refresh_Retailji_product(data: product_detail_selected[]) {
     this.product_retailji_selected = this.globle_retailji_product_list
     data.map((item: product_detail_selected) => {
-      this.product_retailji_selected = this.product_retailji_selected.filter((item_r: product_retailji_selected) => item_r.id.toString() != item.retailji_product_id)
+      this.product_retailji_selected = this.product_retailji_selected.filter((item_r: product_retailji_selected) => item_r.itemno.toString() != item.retailji_product_id)
+    })
+  }
+  private updatearryaproductapi(data: product_detail[]) {
+    this.loading = true
+    this.collection.updateDocumentsArray('product', data).subscribe({
+      next: data => {
+        this.toster.success('Updated All Data Successfully')
+        this.loading = false
+      },
+      error: err => {
+        this.toster.error(err.message)
+        this.loading = false
+      }
     })
   }
   ngOnDestroy() {
@@ -485,5 +513,40 @@ export class ProductsComponent {
     this.sub_product_del?.unsubscribe();
     this.sub_product_update?.unsubscribe();
     this.sub_product_add?.unsubscribe();
+  }
+  refreshRetailjiProcust() {
+    if (this.retailjilist.length != 0) {
+      let list: product_detail[] = this.productList.reduce((acc: any[], product) => {
+        let obj = this.retailjilist.filter((retailjiproduct) => retailjiproduct.itemno.toString() === product.retailji_product_id);
+        if (obj.length !== 0) {
+          acc.push({
+            id: product.id,
+            retailji_product_id: obj[0].itemno.toString(),
+            name: obj[0].item_name,
+            sku_code: obj[0].sku,
+            discount: product.discount,
+            mc_per_g: obj[0].making_per_gm,
+            amount: obj[0].sale_rate,
+            stoke: obj[0].pcs,
+            discription: product.discription,
+            category_id: product.category_id,
+            sub_category_id: product.sub_category_id,
+            images: product.images,
+            related_items: product.related_items,
+            createdTime: product.createdTime
+          });
+        }
+        return acc;
+      }, []);
+      if (list.length != 0) {
+        this.updatearryaproductapi(list)
+      }
+      else {
+        this.toster.error('Creating Refresh List Error')
+      }
+    }
+    else {
+      this.toster.error('Wait Till Retailji Product is Loading....')
+    }
   }
 }

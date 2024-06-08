@@ -5,6 +5,7 @@ export interface product {
     discount: number
     mc_per_g: number
     amount: number
+    stoke: number
     discription: string
     category_id: string
     sub_category_id: string
@@ -20,6 +21,7 @@ export interface product_detail {
     discount: number
     mc_per_g: number
     amount: number
+    stoke: number
     discription: string
     category_id: string
     sub_category_id: string
@@ -35,6 +37,7 @@ export interface product_detail_selected {
     discount: number
     mc_per_g: number
     amount: number
+    stoke: number
     discription: string
     category_id: string
     sub_category_id: string
@@ -71,6 +74,10 @@ export interface product_retailji {
     stone_detail: string
     sku: string
     itemno: number
+    makingpergm: number
+    makingperct: number
+    making_cdp: number
+    making_cdr: number
 }
 export interface product_retailji_selected {
     id: number
@@ -100,5 +107,9 @@ export interface product_retailji_selected {
     stone_detail: string
     sku: string
     itemno: number
+    makingpergm: number
+    makingperct: number
+    making_cdp: number
+    making_cdr: number
     checked: boolean
 }
