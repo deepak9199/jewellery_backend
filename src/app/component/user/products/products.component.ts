@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
 import { MessageService } from '../../../shared/services/message.service';
 import { testdatad } from '../../../shared/model/testdata';
+import { promises } from 'dns';
 
 @Component({
   selector: 'app-products',
@@ -19,6 +20,7 @@ import { testdatad } from '../../../shared/model/testdata';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent {
+
 
   loading: boolean = false
   loadingproduct: boolean = false
@@ -548,5 +550,9 @@ export class ProductsComponent {
     else {
       this.toster.error('Wait Till Retailji Product is Loading....')
     }
+  }
+  relatedProducts(dataobj: product_detail) {
+    this.sharedService.savedata(JSON.stringify(dataobj))
+    this.router.navigate(['/admin/product/related'])
   }
 }

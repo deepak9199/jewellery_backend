@@ -14,16 +14,7 @@
                 <ol class="breadcrumb my-breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Products</li>
-                    <li *ngIf="loadingproduct" class="breadcrumb-item active" aria-current="page">
-                        Loading Retailji Products:
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-info" role="progressbar"
-                                [style.width.%]="progressbarretailji" [attr.aria-valuenow]="progressbarretailji"
-                                [attr.aria-valuemin]="0" [attr.aria-valuemax]="100">
-                                {{ progressbarretailji | number:'1.2-2' }}% Complete (info)
-                            </div>
-                        </div>
-                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Related</li>
                 </ol>
             </nav>
 
@@ -33,35 +24,12 @@
                 <div class="card-body">
                     <form #mySelectCategory="ngForm" (ngSubmit)="mySelectCategory.reset()">
                         <div class="form-row">
-                            <div class="form-group col-md-2">
-                                <select #select_cat_id="ngModel" [(ngModel)]="select_cate_id" (change)="changesubcat()"
-                                    name="select_cat_id" id="select_cat_id" required class="form-control input-style">
-                                    <option value="" selected>Select Category</option>
-                                    <option *ngFor="let catobj of category" [value]="catobj.id">{{catobj.name}}</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <select #select_sub_cat_id="ngModel" [(ngModel)]="select_sub_cate_id"
-                                    name="select_sub_cat_id" id="select_sub_cat_id" class="form-control input-style"
-                                    required>
-                                    <option value="" selected>Select Sub Category</option>
-                                    <option *ngFor="let subcatobj of sub_category_change" [value]="subcatobj.id">
-                                        {{subcatobj.name}}</option>
-                                </select>
-                            </div>
                             <div class="form-group col-md-0">
                                 <!-- <button id="catcreate" class="btn btn-primary btn-style ">Create</button> -->
                                 <button [disabled]="mySelectCategory.invalid" type="button"
                                     class="btn btn-primary btn-style" data-toggle="modal"
                                     data-target="#exampleModalScrollable">
                                     <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                            <div class="form-group col-md-0">
-                                <!-- <button id="catcreate" class="btn btn-primary btn-style ">Create</button> -->
-                                <button (click)="refreshRetailjiProcust()" type="button"
-                                    class="btn btn-primary btn-style">
-                                    <i class="fa fa-refresh"></i>
                                 </button>
                             </div>
                         </div>

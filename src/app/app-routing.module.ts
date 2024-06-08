@@ -12,6 +12,7 @@ import { OrdersComponent } from './component/user/orders/orders.component';
 import { TestimonialsComponent } from './component/user/testimonials/testimonials.component';
 import { SubCategoryMasterComponent } from './component/user/category/sub-category-master/sub-category-master.component';
 import { BannerComponent } from './component/user/banner/banner.component';
+import { RelatedProductsComponent } from './component/user/related-products/related-products.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,11 @@ const routes: Routes = [
   },
   {
     path: 'admin/banner', component: BannerComponent, canActivate: [AuthGuard], data: {
+      role: 'admin'
+    }
+  },
+  {
+    path: 'admin/product/related', component: RelatedProductsComponent, canActivate: [AuthGuard], data: {
       role: 'admin'
     }
   },

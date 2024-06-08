@@ -31,6 +31,7 @@ import { ImagePopUpComponent } from './shared/image-pop-up/image-pop-up.componen
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
 import { LoadingProductComponent } from './shared/loading-product/loading-product.component';
+import { RelatedProductsComponent } from './component/user/related-products/related-products.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +53,8 @@ import { LoadingProductComponent } from './shared/loading-product/loading-produc
     SubCategoryMasterComponent,
     BannerComponent,
     ImagePopUpComponent,
-    LoadingProductComponent
+    LoadingProductComponent,
+    RelatedProductsComponent
   ],
   imports: [
     BrowserModule,
