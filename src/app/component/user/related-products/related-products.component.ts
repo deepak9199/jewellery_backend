@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { product_detail, product_detail_selected } from '../../../shared/model/product';
 import { SharedService } from '../../../shared/services/shared.service';
 import { CollectionService } from '../../../shared/services/collection.service';
@@ -6,7 +6,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
 import { error } from 'console';
-import { isEmpty } from 'rxjs';
+import { Subscription, isEmpty } from 'rxjs';
+import { category_detail, sub_category_detail } from '../../../shared/model/category';
+import { ImagePopUpComponent } from '../../../shared/image-pop-up/image-pop-up.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-related-products',
@@ -35,36 +38,56 @@ export class RelatedProductsComponent {
     related_items: [],
     createdTime: ''
   }
-
-  loadingproduct: any;
-  progressbarretailji: any;
-  select_cate_id: any;
+  role: string = ''
+  deleteobj: product_detail_selected = {
+    id: '',
+    retailji_product_id: '',
+    name: '',
+    sku_code: '',
+    discount: 0,
+    mc_per_g: 0,
+    amount: 0,
+    stoke: 0,
+    discription: '',
+    category_id: '',
+    sub_category_id: '',
+    images: [],
+    related_items: [],
+    checked: false,
+    createdTime: ''
+  }
   category: any;
-  select_sub_cate_id: any;
-  sub_category_change: any;
-  product_details_selected: any;
+  select_sub_cate_id: any[] = [];
+  sub_category_change: any[] = [];
   sub_category: any;
-  role: any;
-  product_retailji_selected: any;
-  edit_form_product: any;
-  progressbar: any;
+  private sub_cat_get: Subscription | undefined
+  private sub_sub_cat_get: Subscription | undefined
   constructor(
     private sharedservice: SharedService,
     private collectionservice: CollectionService,
     private router: Router,
     private toster: ToastrService,
-    private token: TokenStorageService
+    private token: TokenStorageService,
+    private ngZone: NgZone, // Added NgZone
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    this.getSharedData()
+    this.ngZone.run(() => {
+      const user = this.token.getUser()
+      if (user && user.role[0]) {
+        this.role = user.role[0]
+        this.getSharedData()
+      }
+
+    });
   }
 
   getSharedData() {
     const product = this.sharedservice.getdata()
     if (product && typeof product != undefined) {
       this.productData = JSON.parse(product)
-      this.getproductlistApi()
+      this.get_cat_api()
       // console.log(this.productData)
     }
     else {
@@ -72,40 +95,54 @@ export class RelatedProductsComponent {
       this.router.navigate(['/admin/product'])
     }
   }
-  changesubcat() {
-  }
-  refreshRetailjiProcust() {
 
-  }
-  getname(arg0: any, arg1: any) {
 
-  }
-  updatedetail(_t98: any) {
-
-  }
-  openDialog(arg0: any) {
-
-  }
   onFileSelected($event: Event, _t98: any, arg2: number) {
 
   }
-  relatedProducts(_t98: any) {
-
+  selectAllrelated(event: boolean) {
+    this.realtedProductList = this.realtedProductList.map((obj: any) => ({ ...obj, checked: event }));
   }
-  selectAllRetailjiProducts(arg0: boolean) {
+  selectOneByOnerelated(event: boolean, data: product_detail_selected, index: number) {
+    // console.log(data)
+    let obj: product_detail_selected = {
+      id: data.id,
+      retailji_product_id: data.retailji_product_id,
+      category_id: data.category_id,
+      sub_category_id: data.sub_category_id,
+      images: data.images,
+      checked: event,
+      createdTime: data.createdTime,
+      name: data.name,
+      sku_code: data.sku_code,
+      discount: data.discount,
+      mc_per_g: data.mc_per_g,
+      amount: data.amount,
+      discription: data.discription,
+      related_items: [],
+      stoke: data.stoke
+    }
 
-  }
-  selectOneByOneRetailjiProducts(arg0: boolean, _t228: any, _t229: number) {
-
-  }
-  submit_update() {
-
-  }
-  deleteYes() {
-
+    this.realtedProductList[index] = obj
   }
   deleteYesall() {
-
+    this.productData.related_items = this.realtedProductList.filter((objdata: product_detail_selected) => objdata.checked == false).map((checkobj: product_detail_selected) => {
+      {
+        return checkobj.id
+      }
+    })
+    // console.log(this.productData)
+    this.updateproductApi(this.productData)
+  }
+  getname(data: any[], id: string): string {
+    let list = data.filter((item: any) => item.id === id)
+    if (list.length != 0) {
+      return list[0].name
+    }
+    else {
+      console.error('get name not found')
+      return ''
+    }
   }
   addproduct() {
     let list: product_detail_selected[] = this.productList.filter((item: product_detail_selected) => item.checked == true)
@@ -119,7 +156,7 @@ export class RelatedProductsComponent {
     this.productList = this.productList.map((obj: any) => ({ ...obj, checked: event }));
   }
   selectOneByOne(event: boolean, data: product_detail_selected, index: number) {
-    console.log(data)
+    // console.log(data)
     let obj: product_detail_selected = {
       id: data.id,
       retailji_product_id: data.retailji_product_id,
@@ -151,6 +188,11 @@ export class RelatedProductsComponent {
     }
     // console.log(result)
     return result
+  }
+  openDialog(image: string): void {
+    const dialogRef = this.dialog.open(ImagePopUpComponent, {
+      data: { imagesselected: image }
+    });
   }
   private getproductlistApi() {
     this.loading = true
@@ -195,6 +237,7 @@ export class RelatedProductsComponent {
           this.globleproductList = this.globleproductList.filter((product) => !filteredIds.has(product.id));
           this.realtedProductList = data.related_items.map((item: string) => {
             const objdata = this.productList.filter((dataobj: product_detail_selected) => dataobj.id === item)[0]
+            // console.log(objdata)
             return {
               id: objdata.id,
               retailji_product_id: objdata.id,
@@ -235,6 +278,37 @@ export class RelatedProductsComponent {
       },
       error: err => {
         console.error(err.message)
+        this.loading = false
+      }
+    })
+  }
+  private get_cat_api() {
+    this.loading = true
+    this.sub_cat_get = this.collectionservice.getData('category').subscribe({
+      next: (data: category_detail[]) => {
+        this.category = data
+        this.category = this.category.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        this.get_sub_cat_api()
+
+      },
+      error: (err) => {
+        console.error(err)
+        this.loading = false
+      }
+    })
+  }
+  private get_sub_cat_api() {
+    this.loading = true
+    this.sub_cat_get = this.collectionservice.getData('sub-category').subscribe({
+      next: (data: sub_category_detail[]) => {
+        this.sub_category = data
+        this.sub_category = this.sub_category.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        // this.get_product_retailji()
+        this.getproductlistApi()
+
+      },
+      error: (err) => {
+        console.error(err)
         this.loading = false
       }
     })
