@@ -89,7 +89,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let productobj of productList;let i= index">
+                                <tr *ngFor="let productobj of globleproductList;let i= index">
                                     <td class="align-middle">
                                         <input #retailjiselectOnebyone type="checkbox" id="selectedndeselectedproduct"
                                             (click)="selectOneByOne(retailjiselectOnebyone.checked,productobj,i)"

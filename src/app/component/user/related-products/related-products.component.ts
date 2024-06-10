@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
 import { error } from 'console';
+import { isEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-related-products',
@@ -16,6 +17,7 @@ export class RelatedProductsComponent {
 
   loading: boolean = false
   productList: product_detail_selected[] = []
+  globleproductList: product_detail_selected[] = []
   realtedProductList: product_detail_selected[] = []
   private productData: product_detail = {
     id: '',
@@ -174,6 +176,7 @@ export class RelatedProductsComponent {
             createdTime: item.createdTime
           };
         }).filter((objdata: product_detail) => objdata.id != this.productData.id);
+        this.globleproductList = this.productList
         this.getproductbyidApi(this.productData.id)
       },
       error: err => {
@@ -188,6 +191,8 @@ export class RelatedProductsComponent {
       next: (data: product_detail) => {
         if (data.related_items.length != 0) {
           this.productData = data
+          const filteredIds = new Set(data.related_items);
+          this.globleproductList = this.globleproductList.filter((product) => !filteredIds.has(product.id));
           this.realtedProductList = data.related_items.map((item: string) => {
             const objdata = this.productList.filter((dataobj: product_detail_selected) => dataobj.id === item)[0]
             return {
@@ -209,7 +214,7 @@ export class RelatedProductsComponent {
             };
           });
           this.loading = false
-          console.log(this.realtedProductList)
+          // console.log(this.realtedProductList)
         }
         else {
           console.error('No Related Items Found')
