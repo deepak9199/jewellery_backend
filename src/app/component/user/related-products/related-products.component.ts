@@ -153,7 +153,7 @@ export class RelatedProductsComponent {
     this.updateproductApi(this.productData)
   }
   selectAll(event: boolean) {
-    this.productList = this.productList.map((obj: any) => ({ ...obj, checked: event }));
+    this.globleproductList = this.globleproductList.map((obj: any) => ({ ...obj, checked: event }));
   }
   selectOneByOne(event: boolean, data: product_detail_selected, index: number) {
     // console.log(data)
@@ -260,7 +260,8 @@ export class RelatedProductsComponent {
           // console.log(this.realtedProductList)
         }
         else {
-          console.error('No Related Items Found')
+          // console.error('No Related Items Found')
+          this.realtedProductList = []
           this.loading = false
         }
       },
@@ -274,7 +275,7 @@ export class RelatedProductsComponent {
     // this.loading = true
     this.collectionservice.updateDocument('product', data.id, data).subscribe({
       next: data => {
-        this.toster.success('Update Prodcut Successfully')
+        // this.toster.success('Update Prodcut Successfully')
       },
       error: err => {
         console.error(err.message)

@@ -220,12 +220,12 @@ export class ProductsComponent {
       images: data.images,
       checked: event,
       createdTime: data.createdTime,
-      name: '',
-      sku_code: '',
-      discount: 0,
-      mc_per_g: 0,
-      amount: 0,
-      discription: '',
+      name: data.name,
+      sku_code: data.sku_code,
+      discount: data.discount,
+      mc_per_g: data.mc_per_g,
+      amount: data.amount,
+      discription: data.discription,
       related_items: [],
       stoke: 0
     }
