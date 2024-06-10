@@ -32,6 +32,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatDialogModule } from '@angular/material/dialog';
 import { LoadingProductComponent } from './shared/loading-product/loading-product.component';
 import { RelatedProductsComponent } from './component/user/related-products/related-products.component';
+
+import { NgOptimizedImage } from '@angular/common'
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +68,7 @@ import { RelatedProductsComponent } from './component/user/related-products/rela
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     ToastrModule.forRoot(),
+    NgOptimizedImage
   ],
   providers: [
     AuthGuard,

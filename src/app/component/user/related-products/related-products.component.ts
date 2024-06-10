@@ -15,7 +15,7 @@ import { error } from 'console';
 export class RelatedProductsComponent {
 
   loading: boolean = false
-  private productList: product_detail_selected[] = []
+  productList: product_detail_selected[] = []
   realtedProductList: product_detail_selected[] = []
   private productData: product_detail = {
     id: '',
@@ -63,7 +63,7 @@ export class RelatedProductsComponent {
     if (product && typeof product != undefined) {
       this.productData = JSON.parse(product)
       this.getproductlistApi()
-      console.log(this.productData)
+      // console.log(this.productData)
     }
     else {
       console.error('Product is Null : ' + product)
@@ -73,12 +73,6 @@ export class RelatedProductsComponent {
   changesubcat() {
   }
   refreshRetailjiProcust() {
-
-  }
-  selectAll(arg0: boolean) {
-
-  }
-  selectOneByOne(arg0: boolean, _t98: any, _t99: number) {
 
   }
   getname(arg0: any, arg1: any) {
@@ -102,9 +96,6 @@ export class RelatedProductsComponent {
   selectOneByOneRetailjiProducts(arg0: boolean, _t228: any, _t229: number) {
 
   }
-  addproduct() {
-
-  }
   submit_update() {
 
   }
@@ -113,6 +104,39 @@ export class RelatedProductsComponent {
   }
   deleteYesall() {
 
+  }
+  addproduct() {
+    let list: product_detail_selected[] = this.productList.filter((item: product_detail_selected) => item.checked == true)
+    let transformedList = list.map((item: product_detail_selected) => {
+      return item.id;
+    });
+    this.productData.related_items = [...this.productData.related_items, ...transformedList];
+    this.updateproductApi(this.productData)
+  }
+  selectAll(event: boolean) {
+    this.productList = this.productList.map((obj: any) => ({ ...obj, checked: event }));
+  }
+  selectOneByOne(event: boolean, data: product_detail_selected, index: number) {
+    console.log(data)
+    let obj: product_detail_selected = {
+      id: data.id,
+      retailji_product_id: data.retailji_product_id,
+      category_id: data.category_id,
+      sub_category_id: data.sub_category_id,
+      images: data.images,
+      checked: event,
+      createdTime: data.createdTime,
+      name: data.name,
+      sku_code: data.sku_code,
+      discount: data.discount,
+      mc_per_g: data.mc_per_g,
+      amount: data.amount,
+      discription: data.discription,
+      related_items: [],
+      stoke: data.stoke
+    }
+
+    this.productList[index] = obj
   }
   isimage(image: string): boolean {
     // console.log(image)
@@ -130,6 +154,7 @@ export class RelatedProductsComponent {
     this.loading = true
     this.collectionservice.getData('product').subscribe({
       next: (data: product_detail[]) => {
+        // console.log(data)
         this.productList = data.map((item: product_detail) => {
           return {
             id: item.id,
@@ -148,8 +173,8 @@ export class RelatedProductsComponent {
             checked: false,
             createdTime: item.createdTime
           };
-        });
-        this.loading = false
+        }).filter((objdata: product_detail) => objdata.id != this.productData.id);
+        this.getproductbyidApi(this.productData.id)
       },
       error: err => {
         console.error(err.message)
@@ -157,32 +182,39 @@ export class RelatedProductsComponent {
       }
     })
   }
-  private getproductApi(id: string) {
+  private getproductbyidApi(id: string) {
     this.loading = true
     this.collectionservice.getDocumentById('product', id).subscribe({
-      next: (data: product_detail[]) => {
-        this.realtedProductList = data[0].related_items.map((item: string) => {
-          const objdata = this.productList.filter((dataobj: product_detail_selected) => dataobj.id === item)[0]
-          return {
-            id: objdata.id,
-            retailji_product_id: objdata.id,
-            name: objdata.name,
-            sku_code: objdata.sku_code,
-            discount: objdata.discount,
-            mc_per_g: objdata.mc_per_g,
-            amount: objdata.amount,
-            discription: objdata.discription,
-            category_id: objdata.category_id,
-            sub_category_id: objdata.sub_category_id,
-            images: objdata.images,
-            related_items: objdata.related_items,
-            stoke: objdata.stoke,
-            checked: false,
-            createdTime: objdata.createdTime
-          };
-        });
-        this.loading = false
-        console.log(this.realtedProductList)
+      next: (data: product_detail) => {
+        if (data.related_items.length != 0) {
+          this.productData = data
+          this.realtedProductList = data.related_items.map((item: string) => {
+            const objdata = this.productList.filter((dataobj: product_detail_selected) => dataobj.id === item)[0]
+            return {
+              id: objdata.id,
+              retailji_product_id: objdata.id,
+              name: objdata.name,
+              sku_code: objdata.sku_code,
+              discount: objdata.discount,
+              mc_per_g: objdata.mc_per_g,
+              amount: objdata.amount,
+              discription: objdata.discription,
+              category_id: objdata.category_id,
+              sub_category_id: objdata.sub_category_id,
+              images: objdata.images,
+              related_items: objdata.related_items,
+              stoke: objdata.stoke,
+              checked: false,
+              createdTime: objdata.createdTime
+            };
+          });
+          this.loading = false
+          console.log(this.realtedProductList)
+        }
+        else {
+          console.error('No Related Items Found')
+          this.loading = false
+        }
       },
       error: err => {
         console.error(err.message)
@@ -190,5 +222,16 @@ export class RelatedProductsComponent {
       }
     })
   }
-
+  private updateproductApi(data: product_detail) {
+    // this.loading = true
+    this.collectionservice.updateDocument('product', data.id, data).subscribe({
+      next: data => {
+        this.toster.success('Update Prodcut Successfully')
+      },
+      error: err => {
+        console.error(err.message)
+        this.loading = false
+      }
+    })
+  }
 }
