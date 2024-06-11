@@ -12,8 +12,9 @@
         <div class="container-fluid content-top-gap">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Products</li>
+                    <li class="breadcrumb-item"><a>Home</a></li>
+                    <li [routerLink]="['/admin/product']" class="breadcrumb-item active" aria-current="page">Products
+                    </li>
                     <li class="breadcrumb-item active" aria-current="page">Related</li>
                 </ol>
             </nav>
