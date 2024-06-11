@@ -35,6 +35,7 @@ export class BannerComponent {
     id: ''
   }
   role: string = ''
+  private uid: string = ''
   testimonials_seleted: banner_details_selected[] = []
   progressbar: number = 0
   private sub_testimonials_get: Subscription | undefined
@@ -44,18 +45,18 @@ export class BannerComponent {
   constructor(
     private toster: ToastrService,
     private collection: CollectionService,
-    private apicall: ApiCallService,
-    private router: Router,
     private token: TokenStorageService,
-    private sharedService: SharedService,
     private renderer: Renderer2,
     private el: ElementRef,
     private dialog: MatDialog
   ) { }
   ngOnInit() {
-    if (this.token.getUser().role[0] != null)
-      this.role = this.token.getUser().role[0]
-    this.get_test_api()
+    const user = this.token.getUser()
+    if (user && user.role[0] && user.uid) {
+      this.role = user.role[0]
+      this.uid = user.uid
+      this.get_test_api()
+    }
   }
   openDialog(image: string): void {
     const dialogRef = this.dialog.open(ImagePopUpComponent, {
@@ -116,7 +117,7 @@ export class BannerComponent {
       const file: File = event.target.files[0];
       this.openModal()
       if (file) {
-        this.collection.uploadFile(file, 'users/' + this.token.getUser().uid + '/banner').subscribe(
+        this.collection.uploadFile(file, 'users/' + this.uid + '/banner').subscribe(
           (progress) => {
             if (progress != null)
               this.progressbar = progress;
@@ -130,7 +131,7 @@ export class BannerComponent {
           },
           () => {
             console.log('Upload complete');
-            this.collection.getDownloadUrl('users/' + this.token.getUser().uid + '/banner/' + file.name).subscribe(
+            this.collection.getDownloadUrl('users/' + this.uid + '/banner/' + file.name).subscribe(
               (url) => {
                 console.log('Download URL:', url);
                 data.image = url
