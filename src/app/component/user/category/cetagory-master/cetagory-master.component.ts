@@ -44,9 +44,11 @@ export class CetagoryMasterComponent {
   ) { }
 
   ngOnInit() {
-    if (this.token.getUser().role[0] != null)
-      this.role = this.token.getUser().role[0]
-    this.getcategoryapi()
+    const user = this.token.getUser()
+    if (user && user.role[0]) {
+      this.role = user.role[0]
+      this.getcategoryapi()
+    }
   }
   createCaegory() {
     // console.log(this.form_category)
@@ -94,13 +96,28 @@ export class CetagoryMasterComponent {
     this.sharedService.savedata(JSON.stringify(data))
   }
   private deleteapi(data: category_detail) {
+    this.loading = true
     this.subdeletecategory = this.collection.deleteDocument('category', data.id).subscribe({
-      next: (data) => {
-        // this.toster.success('Deleted Successfully')
-        // this.ngOnInit()
+      next: (dataobj) => {
+        this.deletebycatidApi(data.id, 'sub-category')
+        this.deletebycatidApi(data.id, 'product')
       },
       error: (err) => {
         console.log(err)
+        this.loading = false
+      }
+    })
+  }
+  private deletebycatidApi(catid: string, collection: string) {
+    // console.log(catid)
+    this.collection.deleteDocumentsByCategory(collection, catid).subscribe({
+      next: data => {
+        // console.log('deleted by cat id all successufully')
+        this.loading = false
+      },
+      error: err => {
+        console.error(err.message)
+        this.loading = false
       }
     })
   }

@@ -108,18 +108,61 @@ export class CollectionService {
       });
     });
   }
+
   deleteDocument(collectionName: string, docId: string): Observable<void> {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).delete()
         .then(() => {
-          // const deleteAttendancePromise = this.deleteData('sub_category', 'category_id', docId);
+          // console.log(docId, collectionName);
           observer.next();
           observer.complete();
         })
         .catch(error => {
+          console.error(error);
           observer.error(error);
         });
     });
+  }
+
+  deleteDocumentsByCategory(collectionName: string, categoryId: string): Observable<void> {
+    return this.firestore.collection(collectionName, ref => ref.where('category_id', '==', categoryId))
+      .snapshotChanges()
+      .pipe(
+        switchMap(actions => {
+          const deleteObservables = actions.map(action => {
+            const docId = action.payload.doc.id;
+            return this.deleteDocument(collectionName, docId).toPromise();
+          });
+          return from(Promise.all(deleteObservables)).pipe(
+            map(() => { }),
+            catchError(error => {
+              console.error('Error deleting documents: ', error);
+              throw error;
+            })
+          );
+        })
+      );
+  }
+
+
+  deleteDocumentsBySubCategory(collectionName: string, subCategoryId: string): Observable<void> {
+    return this.firestore.collection(collectionName, ref => ref.where('sub_category_id', '==', subCategoryId))
+      .snapshotChanges()
+      .pipe(
+        switchMap(actions => {
+          const deleteObservables = actions.map(action => {
+            const docId = action.payload.doc.id;
+            return this.deleteDocument(collectionName, docId).toPromise();
+          });
+          return from(Promise.all(deleteObservables)).pipe(
+            map(() => { }),
+            catchError(error => {
+              console.error('Error deleting documents: ', error);
+              throw error;
+            })
+          );
+        })
+      );
   }
   updateDocument(collectionName: string, docId: string, data: any): Observable<void> {
     return new Observable<void>(observer => {

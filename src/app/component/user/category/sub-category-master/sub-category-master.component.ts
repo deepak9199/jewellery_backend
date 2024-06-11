@@ -115,13 +115,29 @@ export class SubCategoryMasterComponent {
     this.sharedService.savedata(JSON.stringify(data))
   }
   private deleteapi(data: sub_category_detail) {
+    this.loading = true
     this.subdeletecategory = this.collection.deleteDocument('sub-category', data.id).subscribe({
-      next: (data) => {
+      next: (dataobj) => {
         // this.toster.success('Deleted Successfully')
         // this.ngOnInit()
+        this.deletebysubcatidApi(data.id, 'product')
       },
       error: (err) => {
         console.log(err)
+        this.loading = false
+      }
+    })
+  }
+  private deletebysubcatidApi(subcatid: string, collection: string) {
+    // console.log(catid)
+    this.collection.deleteDocumentsBySubCategory(collection, subcatid).subscribe({
+      next: data => {
+        // console.log('deleted by cat id all successufully')
+        this.loading = false
+      },
+      error: err => {
+        console.error(err.message)
+        this.loading = false
       }
     })
   }

@@ -1,12 +1,8 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { testimonials, testimonials_details, testimonials_selected } from '../../../shared/model/testimonials';
 import { Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { ApiCallService } from '../../../shared/services/api-call.service';
 import { CollectionService } from '../../../shared/services/collection.service';
-import { SharedService } from '../../../shared/services/shared.service';
 import { TokenStorageService } from '../../../shared/services/token-storage.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-testimonials',
@@ -39,14 +35,8 @@ export class TestimonialsComponent {
   private sub_testimonials_update: Subscription | undefined
   private sub_testimonials_add: Subscription | undefined
   constructor(
-    private toster: ToastrService,
     private collection: CollectionService,
-    private apicall: ApiCallService,
-    private router: Router,
     private token: TokenStorageService,
-    private sharedService: SharedService,
-    private renderer: Renderer2,
-    private el: ElementRef
   ) { }
 
   ngOnInit() {
