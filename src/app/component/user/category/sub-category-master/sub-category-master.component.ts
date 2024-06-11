@@ -42,6 +42,7 @@ export class SubCategoryMasterComponent {
   private subagetcategory: Subscription | undefined
   private subupdatecategory: Subscription | undefined
   private subdeletecategory: Subscription | undefined
+  private subdeletecategoryid: Subscription | undefined
   constructor(
     private toster: ToastrService,
     private collection: CollectionService,
@@ -130,7 +131,7 @@ export class SubCategoryMasterComponent {
   }
   private deletebysubcatidApi(subcatid: string, collection: string) {
     // console.log(catid)
-    this.collection.deleteDocumentsBySubCategory(collection, subcatid).subscribe({
+    this.subdeletecategoryid = this.collection.deleteDocumentsBySubCategory(collection, subcatid).subscribe({
       next: data => {
         // console.log('deleted by cat id all successufully')
         this.loading = false
@@ -196,5 +197,7 @@ export class SubCategoryMasterComponent {
       this.subupdatecategory.unsubscribe()
     if (this.subdeletecategory)
       this.subdeletecategory.unsubscribe()
+    if (this.subdeletecategoryid)
+      this.subdeletecategoryid.unsubscribe()
   }
 }

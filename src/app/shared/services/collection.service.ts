@@ -108,7 +108,6 @@ export class CollectionService {
       });
     });
   }
-
   deleteDocument(collectionName: string, docId: string): Observable<void> {
     return new Observable<void>(observer => {
       this.firestore.collection(collectionName).doc(docId).delete()
@@ -123,7 +122,6 @@ export class CollectionService {
         });
     });
   }
-
   deleteDocumentsByCategory(collectionName: string, categoryId: string): Observable<void> {
     return this.firestore.collection(collectionName, ref => ref.where('category_id', '==', categoryId))
       .snapshotChanges()
@@ -131,7 +129,17 @@ export class CollectionService {
         switchMap(actions => {
           const deleteObservables = actions.map(action => {
             const docId = action.payload.doc.id;
-            return this.deleteDocument(collectionName, docId).toPromise();
+            const data = action.payload.doc.data() as product_detail;
+            if (collectionName === 'product') {
+              const imageDeletionObservables = data.images.map(imageUrl => this.deleteFile(imageUrl).toPromise());
+              return from(Promise.all(imageDeletionObservables))
+                .pipe(
+                  switchMap(() => this.deleteDocument(collectionName, docId).toPromise())
+                ).toPromise();
+            }
+            else {
+              return this.deleteDocument(collectionName, docId).toPromise();
+            }
           });
           return from(Promise.all(deleteObservables)).pipe(
             map(() => { }),
@@ -143,8 +151,6 @@ export class CollectionService {
         })
       );
   }
-
-
   deleteDocumentsBySubCategory(collectionName: string, subCategoryId: string): Observable<void> {
     return this.firestore.collection(collectionName, ref => ref.where('sub_category_id', '==', subCategoryId))
       .snapshotChanges()
@@ -152,7 +158,17 @@ export class CollectionService {
         switchMap(actions => {
           const deleteObservables = actions.map(action => {
             const docId = action.payload.doc.id;
-            return this.deleteDocument(collectionName, docId).toPromise();
+            const data = action.payload.doc.data() as product_detail;
+            if (collectionName === 'product') {
+              const imageDeletionObservables = data.images.map(imageUrl => this.deleteFile(imageUrl).toPromise());
+              return from(Promise.all(imageDeletionObservables))
+                .pipe(
+                  switchMap(() => this.deleteDocument(collectionName, docId).toPromise())
+                ).toPromise();
+            }
+            else {
+              return this.deleteDocument(collectionName, docId).toPromise();
+            }
           });
           return from(Promise.all(deleteObservables)).pipe(
             map(() => { }),
@@ -185,9 +201,25 @@ export class CollectionService {
     return task.percentageChanges();
   }
   deleteFile(fileUrl: string): Observable<void> {
-    const fileRef = this.storage.refFromURL(fileUrl); // Get reference from URL
-    return fileRef.delete();
+    const fileRef = this.storage.refFromURL(fileUrl);
+    return new Observable<void>(observer => {
+      fileRef.delete()
+        .subscribe({
+          next: () => {
+            observer.next();
+            observer.complete();
+          },
+          error: (error) => {
+            console.error('Error deleting file: ', error);
+            observer.error(error);
+          }
+        });
+    });
   }
+  // deleteFile(fileUrl: string): Observable<void> {
+  //   const fileRef = this.storage.refFromURL(fileUrl); // Get reference from URL
+  //   return fileRef.delete();
+  // }
   getDownloadUrl(filePath: string): Observable<string> {
     const fileRef = this.storage.ref(filePath);
     return fileRef.getDownloadURL();

@@ -35,6 +35,7 @@ export class CetagoryMasterComponent {
   private subagetcategory: Subscription | undefined
   private subupdatecategory: Subscription | undefined
   private subdeletecategory: Subscription | undefined
+  private subdeletecategoryid: Subscription | undefined
   constructor(
     private toster: ToastrService,
     private collection: CollectionService,
@@ -110,7 +111,7 @@ export class CetagoryMasterComponent {
   }
   private deletebycatidApi(catid: string, collection: string) {
     // console.log(catid)
-    this.collection.deleteDocumentsByCategory(collection, catid).subscribe({
+    this.subdeletecategoryid = this.collection.deleteDocumentsByCategory(collection, catid).subscribe({
       next: data => {
         // console.log('deleted by cat id all successufully')
         this.loading = false
@@ -169,5 +170,7 @@ export class CetagoryMasterComponent {
       this.subupdatecategory.unsubscribe()
     if (this.subdeletecategory)
       this.subdeletecategory.unsubscribe()
+    if (this.subdeletecategoryid)
+      this.subdeletecategoryid.unsubscribe()
   }
 }
