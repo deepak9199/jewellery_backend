@@ -36,7 +36,10 @@ export class RelatedProductsComponent {
     sub_category_id: '',
     images: [],
     related_items: [],
-    createdTime: ''
+    createdTime: '',
+    purity: '',
+    gwt: 0,
+    nwt: 0
   }
   role: string = ''
   deleteobj: product_detail_selected = {
@@ -54,7 +57,10 @@ export class RelatedProductsComponent {
     images: [],
     related_items: [],
     checked: false,
-    createdTime: ''
+    createdTime: '',
+    purity: '',
+    gwt: 0,
+    nwt: 0
   }
   category: any;
   select_sub_cate_id: any[] = [];
@@ -120,7 +126,10 @@ export class RelatedProductsComponent {
       amount: data.amount,
       discription: data.discription,
       related_items: [],
-      stoke: data.stoke
+      stoke: data.stoke,
+      purity: '',
+      gwt: 0,
+      nwt: 0
     }
 
     this.realtedProductList[index] = obj
@@ -172,7 +181,10 @@ export class RelatedProductsComponent {
       amount: data.amount,
       discription: data.discription,
       related_items: [],
-      stoke: data.stoke
+      stoke: data.stoke,
+      purity: '',
+      gwt: 0,
+      nwt: 0
     }
 
     this.productList[index] = obj
@@ -208,6 +220,9 @@ export class RelatedProductsComponent {
             discount: item.discount,
             mc_per_g: item.mc_per_g,
             amount: item.amount,
+            purity: item.purity,
+            gwt: item.gwt,
+            nwt: item.nwt,
             discription: item.discription,
             category_id: item.category_id,
             sub_category_id: item.sub_category_id,
@@ -247,6 +262,9 @@ export class RelatedProductsComponent {
               mc_per_g: objdata.mc_per_g,
               amount: objdata.amount,
               discription: objdata.discription,
+              nwt: objdata.nwt,
+              gwt: objdata.gwt,
+              purity: objdata.purity,
               category_id: objdata.category_id,
               sub_category_id: objdata.sub_category_id,
               images: objdata.images,

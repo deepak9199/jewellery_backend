@@ -89,6 +89,9 @@
                                     <th>category</th>
                                     <th>Sub subcategory</th>
                                     <th>Name</th>
+                                    <th>Rate</th>
+                                    <th>Gwt</th>
+                                    <th>Nwt</th>
                                     <th>Sku Code</th>
                                     <th>Dis %</th>
                                     <th>mc/g</th>
@@ -114,7 +117,16 @@
                                         {{getname(sub_category,productobj.sub_category_id)}}
                                     </td>
                                     <td class="align-middle">
-                                        {{productobj.name}} / (Rs.{{productobj.amount}})
+                                        {{productobj.name}}
+                                    </td>
+                                    <td class="align-middle">
+                                        Rs.{{productobj.amount}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{productobj.gwt}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{productobj.nwt}}
                                     </td>
                                     <td class="align-middle">
                                         {{productobj.sku_code}}
@@ -315,7 +327,9 @@
                                     <th>Barcode</th>
                                     <th>Sku</th>
                                     <th>Mrp</th>
-                                    <th>Mpg</th>
+                                    <th>Gwt</th>
+                                    <th>nwt</th>
+                                    <th>Mcg</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -330,7 +344,9 @@
                                     <td> {{retailjiproductobj.item_name}} </td>
                                     <td> {{retailjiproductobj.barcode}} </td>
                                     <td> {{retailjiproductobj.sku}} </td>
-                                    <td> {{retailjiproductobj.mrp}} </td>
+                                    <td> {{retailjiproductobj.sale_rate}} </td>
+                                    <td> {{retailjiproductobj.gwt}} </td>
+                                    <td> {{retailjiproductobj.nwt}} </td>
                                     <td> {{retailjiproductobj.making_per_gm}} </td>
                                 </tr>
                             </tbody>
@@ -451,7 +467,7 @@
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Conformation</h5>
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Upload Progress</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>

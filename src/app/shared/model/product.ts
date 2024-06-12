@@ -6,6 +6,9 @@ export interface product {
     mc_per_g: number
     amount: number
     stoke: number
+    purity: string
+    gwt: number
+    nwt: number
     discription: string
     category_id: string
     sub_category_id: string
@@ -22,6 +25,9 @@ export interface product_detail {
     mc_per_g: number
     amount: number
     stoke: number
+    purity: string
+    gwt: number
+    nwt: number
     discription: string
     category_id: string
     sub_category_id: string
@@ -38,6 +44,9 @@ export interface product_detail_selected {
     mc_per_g: number
     amount: number
     stoke: number
+    purity: string
+    gwt: number
+    nwt: number
     discription: string
     category_id: string
     sub_category_id: string

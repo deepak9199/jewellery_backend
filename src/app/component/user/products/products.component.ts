@@ -45,7 +45,10 @@ export class ProductsComponent {
     amount: 0,
     discription: '',
     related_items: [],
-    stoke: 0
+    stoke: 0,
+    purity: '',
+    gwt: 0,
+    nwt: 0
   }
   deleteobj: product_detail = {
     id: '',
@@ -61,7 +64,10 @@ export class ProductsComponent {
     amount: 0,
     discription: '',
     related_items: [],
-    stoke: 0
+    stoke: 0,
+    purity: '',
+    gwt: 0,
+    nwt: 0
   }
   progressbar: number = 0
   progressbarretailji: number = 0
@@ -120,6 +126,9 @@ export class ProductsComponent {
         discount: 0,
         mc_per_g: item.making_per_gm,
         amount: item.sale_rate,
+        purity: item.purity,
+        gwt: item.gwt,
+        nwt: item.nwt,
         discription: '',
         category_id: this.select_cate_id,
         sub_category_id: this.select_sub_cate_id,
@@ -203,7 +212,10 @@ export class ProductsComponent {
         amount: 0,
         discription: '',
         related_items: [],
-        stoke: 0
+        stoke: 0,
+        purity: '',
+        gwt: 0,
+        nwt: 0
       })
     })
 
@@ -227,7 +239,10 @@ export class ProductsComponent {
       amount: data.amount,
       discription: data.discription,
       related_items: [],
-      stoke: 0
+      stoke: 0,
+      purity: '',
+      gwt: 0,
+      nwt: 0
     }
     this.product_details_selected[index] = obj
   }
@@ -388,6 +403,9 @@ export class ProductsComponent {
             discount: item.discount,
             mc_per_g: item.mc_per_g,
             amount: item.amount,
+            purity: item.purity,
+            gwt: item.gwt,
+            nwt: item.nwt,
             discription: item.discription,
             category_id: item.category_id,
             sub_category_id: item.sub_category_id,
