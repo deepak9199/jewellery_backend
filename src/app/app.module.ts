@@ -33,7 +33,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoadingProductComponent } from './shared/loading-product/loading-product.component';
 import { RelatedProductsComponent } from './component/user/related-products/related-products.component';
 
-import { NgOptimizedImage } from '@angular/common'
+import { NgOptimizedImage } from '@angular/common';
+import { FaqComponent } from './component/user/faq/faq.component'
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +57,8 @@ import { NgOptimizedImage } from '@angular/common'
     BannerComponent,
     ImagePopUpComponent,
     LoadingProductComponent,
-    RelatedProductsComponent
+    RelatedProductsComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,

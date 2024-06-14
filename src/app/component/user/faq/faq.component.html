@@ -1,0 +1,61 @@
+<section>
+    <!-- sidebar menu start -->
+    <app-nav></app-nav>
+    <!-- //sidebar menu end -->
+    <!-- header-starts -->
+    <app-side></app-side>
+    <!-- //header-ends -->
+    <!-- main content start -->
+    <div class="main-content">
+
+        <!-- content -->
+        <div class="container-fluid content-top-gap">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb my-breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
+                </ol>
+            </nav>
+            <!-- table -->
+            <app-loading *ngIf="loading"></app-loading>
+            <div *ngIf="!loading" class="card card_border">
+                <div class="card-body">
+                    <div class="table-main">
+                        <table id="documents-table" class="table">
+                            <thead class="sub-titles">
+                                <tr>
+                                    <th>S/n</th>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let catobj of orderList  ;let i=index">
+                                    <td class="align-middle">
+                                        {{i+1}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.question}}
+                                    </td>
+                                    <td class="align-middle">
+                                        <textarea [(ngModel)]="catobj.answer" id="answer" name="answer"
+                                            (keyup.enter)="updatestatus(catobj)" #answer="ngModel" type="text" required
+                                            class="form-control" placeholder="Enter Answer"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- table end -->
+
+        </div>
+        <!-- //content -->
+    </div>
+    <!-- main content end-->
+</section>
+<app-footer></app-footer>
