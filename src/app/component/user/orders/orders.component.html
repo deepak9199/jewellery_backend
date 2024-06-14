@@ -18,25 +18,60 @@
                 </ol>
             </nav>
             <!-- table -->
-            <div class="card card_border">
+            <app-loading *ngIf="loading"></app-loading>
+            <div *ngIf="!loading" class="card card_border">
                 <div class="card-body">
                     <div class="table-main">
                         <table id="documents-table" class="table">
                             <thead class="sub-titles">
                                 <tr>
-                                    <th scope="col">
-                                        <div style="width: 40px;">
-                                            <input type="checkbox" id="selectedndeselected" onclick="ischeckedall()">
-                                            <i id='deleteid' style="cursor: pointer;" class="fa fa-trash"></i>
-                                        </div>
-                                    </th>
-                                    <th>Cetagory ID</th>
-                                    <th>Name</th>
-                                    <th>Sub Cetagory</th>
+                                    <th>View</th>
+                                    <th>S/n</th>
+                                    <th>Order Id</th>
+                                    <th>No. Of Items</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Payment Mode</th>
+                                    <th>Payemnt Status</th>
+                                    <th>Payemnt transactionid</th>
                                 </tr>
                             </thead>
-                            <tbody>
 
+                            <tbody>
+                                <tr *ngFor="let catobj of orderList  ;let i=index">
+                                    <td>
+                                        <i style="cursor: pointer;" (click)="selectdata(catobj)" class="fa fa-eye"></i>
+                                    </td>
+                                    <td class="align-middle">
+                                        {{i+1}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.orderId}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.cartItems.length}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{formatCustomTimestamp(catobj.createdTime)}}
+                                    </td>
+                                    <td class="align-middle">
+                                        <select [(ngModel)]="catobj.status" name="status" id="status"
+                                            (change)="updatestatus(catobj)" class="form-control ">
+                                            <option value="requested">Requested</option>
+                                            <option value="delivered">Delivered</option>
+                                        </select>
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.payment.mode}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.payment.status}}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{catobj.payment.transactionid}}
+                                    </td>
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
